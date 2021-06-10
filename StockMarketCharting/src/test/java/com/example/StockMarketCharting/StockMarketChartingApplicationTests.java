@@ -1,10 +1,10 @@
-package com.example.StockMarketChartingg;
+package com.example.StockMarketCharting;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class StockMarketChartinggApplicationTests {
+class StockMarketChartingApplicationTests {
 
 	@Test
 	void contextLoads() {
