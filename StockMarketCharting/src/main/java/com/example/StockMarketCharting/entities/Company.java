@@ -18,61 +18,61 @@ import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.Type;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class Company {
-     
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	
+
 	@Column(nullable = false)
 	private String companyName;
-	
-	
-	@Column(nullable = false)
-	private double  turnover;
-	
-	@Column(nullable = false)
-	private String CEO;
-	
-	@Column(nullable = false)
-	@Type(type="text")
-	private String BoardOfDirectors;
-	
-	@OneToOne(fetch = FetchType.LAZY,mappedBy="company")
-	private IPODetail ipo;
-	
 
-	
+	@Column(nullable = false)
+	private double turnover;
+
+	@Column(nullable = false)
+	@JsonProperty("ceo")
+	private String CEO;
+
+	@Column(nullable = false)
+	@Type(type = "text")
+	private String boardOfDirectors;
+
+	@Column(nullable = false)
+	@Type(type = "text")
+	private String companyBrief;
+
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "company")
+	private IPODetail ipo;
+
 	@ManyToMany
 	@JoinTable(name = "COMPANY_STOCK_EXCHANGE", joinColumns = @JoinColumn(name = "COMPANY_ID"), inverseJoinColumns = @JoinColumn(name = "STOCK_EXCHANGE_ID"))
 	private List<StockExchange> stockExchanges = new ArrayList<>();
-	
+
 	@ManyToOne
 	private Sector sector;
-	
-	@OneToMany(mappedBy="company")
-	private List<StockPrice> stockPrices = new ArrayList<>();
-	
-	@Column(nullable = false)
-	@Type(type="text")
-	private String companyBrief;
-	
-	protected Company(){}
 
-	public Company(String companyName, double turnover, String cEO, String boardOfDirectors, IPODetail ipo,
-			List<StockExchange> stockExchanges, Sector sector, List<StockPrice> stockPrices, String companyBrief) {
+	@OneToMany(mappedBy = "company")
+	private List<StockPrice> stockPrices = new ArrayList<>();
+
+	protected Company() {
+	}
+
+	public Company(String companyName, double turnover, String cEO, String boardOfDirectors, String companyBrief) {
 		super();
 		this.companyName = companyName;
 		this.turnover = turnover;
-		CEO = cEO;
-		BoardOfDirectors = boardOfDirectors;
-		this.ipo = ipo;
-		this.stockExchanges = stockExchanges;
-		this.sector = sector;
-		this.stockPrices = stockPrices;
+		this.CEO = cEO;
+		this.boardOfDirectors = boardOfDirectors;
 		this.companyBrief = companyBrief;
+	}
+
+	public Long getId() {
+		return id;
+
 	}
 
 	public String getCompanyName() {
@@ -96,15 +96,15 @@ public class Company {
 	}
 
 	public void setCEO(String cEO) {
-		CEO = cEO;
+		this.CEO = cEO;
 	}
 
 	public String getBoardOfDirectors() {
-		return BoardOfDirectors;
+		return boardOfDirectors;
 	}
 
 	public void setBoardOfDirectors(String boardOfDirectors) {
-		BoardOfDirectors = boardOfDirectors;
+		this.boardOfDirectors = boardOfDirectors;
 	}
 
 	public IPODetail getIpo() {
@@ -146,7 +146,5 @@ public class Company {
 	public void setCompanyBrief(String companyBrief) {
 		this.companyBrief = companyBrief;
 	}
-	
-	
-	
+
 }
