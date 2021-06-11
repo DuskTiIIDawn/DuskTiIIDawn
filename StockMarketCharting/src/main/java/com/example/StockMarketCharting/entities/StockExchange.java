@@ -15,32 +15,48 @@ import javax.persistence.OneToMany;
 public class StockExchange {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	
+
 	@Column(nullable = false)
 	private String stockExchangeName;
-	
+
 	@Column(nullable = false)
 	private String brief;
-	
+
 	@Column(nullable = false)
 	private String contactAddress;
-	
+
 	@Column(nullable = false)
-	private String  remarks;
-	
-	@ManyToMany(mappedBy="stockExchanges")
-	private List<Company> companies = new ArrayList<>();
-	
-	@ManyToMany(mappedBy="stockExchanges")
+	private String remarks;
+
+	@ManyToMany(mappedBy = "stockExchanges")
 	private List<IPODetail> ipos = new ArrayList<>();
-	
-	@OneToMany(mappedBy="stockExchange")
+
+	@OneToMany(mappedBy = "stockExchange")
 	private List<StockPrice> stockPrices = new ArrayList<>();
-	
-	
-	protected StockExchange() {}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setStockPrices(List<StockPrice> stockPrices) {
+		this.stockPrices = stockPrices;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public List<StockPrice> getStockPrices() {
+		return stockPrices;
+	}
+
+	@OneToMany(mappedBy = "stockExchange")
+	private List<StockCode> stockExchageCodes = new ArrayList<>();
+
+	protected StockExchange() {
+	}
 
 	public StockExchange(String stockExchangeName, String brief, String contactAddress, String remarks) {
 		super();
@@ -48,10 +64,6 @@ public class StockExchange {
 		this.brief = brief;
 		this.contactAddress = contactAddress;
 		this.remarks = remarks;
-	}
-
-	public Long getId() {
-		return id;
 	}
 
 	public String getStockExchangeName() {
@@ -70,16 +82,12 @@ public class StockExchange {
 		return remarks;
 	}
 
-	public List<Company> getCompanies() {
-		return companies;
-	}
-
 	public List<IPODetail> getIpos() {
 		return ipos;
 	}
 
-	public List<StockPrice> getStockPrices() {
-		return stockPrices;
+	public List<StockCode> getStockExchageCodes() {
+		return stockExchageCodes;
 	}
 
 	public void setStockExchangeName(String stockExchangeName) {
@@ -98,19 +106,12 @@ public class StockExchange {
 		this.remarks = remarks;
 	}
 
-	public void setCompanies(List<Company> companies) {
-		this.companies = companies;
-	}
-
 	public void setIpos(List<IPODetail> ipos) {
 		this.ipos = ipos;
 	}
 
-	public void setStockPrices(List<StockPrice> stockPrices) {
-		this.stockPrices = stockPrices;
+	public void setStockExchageCodes(List<StockCode> stockExchageCodes) {
+		this.stockExchageCodes = stockExchageCodes;
 	}
 
-	
-
-	
 }

@@ -26,8 +26,8 @@ public class CompanyService {
 		Optional<Company> c = companyRepository.findById((Long) company.getId());
 		if (c.isPresent()) {
 			Company dataCompany = c.get();
-			dataCompany.setCEO(null);
-
+			dataCompany = company;
+			companyRepository.save(dataCompany);
 			return true;
 		} else {
 			return false;

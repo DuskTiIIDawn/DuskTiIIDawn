@@ -39,8 +39,12 @@ public class CompanyController {
 	@ResponseBody
 	@CrossOrigin("*")
 	public String updateCompany(@RequestBody Company company) {
-		service.updateCompany(company);
-		return "Company Updated";
+		boolean isUpdated = service.updateCompany(company);
+		if (isUpdated) {
+			return "Company Updated";
+		} else {
+			return "Update Failed";
+		}
 	}
 
 }
