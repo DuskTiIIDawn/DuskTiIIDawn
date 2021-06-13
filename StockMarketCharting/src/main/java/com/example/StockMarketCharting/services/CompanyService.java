@@ -21,23 +21,28 @@ public class CompanyService {
 	public void addCompany(Company company) {
 		companyRepository.save(company);
 	}
-
-	public boolean updateCompany(Company company) {
-		Optional<Company> c = companyRepository.findById((Long) company.getId());
-		if (c.isPresent()) {
-			Company dataCompany = c.get();
-			dataCompany = company;
-			companyRepository.save(dataCompany);
-			return true;
-		} else {
-			return false;
-		}
-
-	}
+	/*
+	 * public boolean updateCompany(Company company) { Optional<Company> c =
+	 * companyRepository.findById((Long) company.getId()); if (c.isPresent()) {
+	 * Company dataCompany = c.get(); dataCompany = company;
+	 * companyRepository.save(dataCompany); return true; } else { return false; }
+	 * 
+	 * }
+	 * 
+	 */
 
 	public List<Company> findallCompanies() {
 		List<Company> companyList = companyRepository.findAll();
 		return companyList;
+	}
+
+	public Company findById(long l) {
+		Optional<Company> ose = companyRepository.findById(l);
+		if (ose.isPresent()) {
+			return ose.get();
+		} else {
+			return null;
+		}
 	}
 
 }

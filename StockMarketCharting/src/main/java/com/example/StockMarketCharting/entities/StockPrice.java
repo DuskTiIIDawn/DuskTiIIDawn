@@ -4,51 +4,46 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class StockPrice {
-	
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Long ID;
 
-	@ManyToOne
-	private Company company ;
-	
-	@ManyToOne
-	private StockExchange stockExchange ;
-	
-	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
+	private StockCode stockCode;
+
 	@Column(nullable = false)
 	private double currentPrice;
-	
+
 	@Column(nullable = false)
 	private LocalDateTime dateTime;
 
-	public StockPrice(Company company, StockExchange stockExchage, double currentPrice, LocalDateTime dateTime) {
+	protected StockPrice() {
+	}
+
+	public StockPrice(double currentPrice, LocalDateTime dateTime) {
 		super();
-		this.company = company;
-		this.stockExchange = stockExchage;
 		this.currentPrice = currentPrice;
 		this.dateTime = dateTime;
 	}
 
-	public Long getID() {
-		return ID;
+	public Long getId() {
+		return id;
 	}
 
-	public Company getCompany() {
-		return company;
-	}
-
-	public StockExchange getStockExchage() {
-		return stockExchange;
+	public StockCode getStockCode() {
+		return stockCode;
 	}
 
 	public double getCurrentPrice() {
@@ -59,12 +54,8 @@ public class StockPrice {
 		return dateTime;
 	}
 
-	public void setCompany(Company company) {
-		this.company = company;
-	}
-
-	public void setStockExchage(StockExchange stockExchage) {
-		this.stockExchange = stockExchage;
+	public void setStockCode(StockCode stockCode) {
+		this.stockCode = stockCode;
 	}
 
 	public void setCurrentPrice(double currentPrice) {
@@ -75,7 +66,4 @@ public class StockPrice {
 		this.dateTime = dateTime;
 	}
 
-	
-	
-	
 }

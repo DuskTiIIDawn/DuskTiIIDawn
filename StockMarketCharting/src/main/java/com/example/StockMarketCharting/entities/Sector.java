@@ -10,31 +10,31 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Sector {
-  
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	
+
 	@Column(nullable = false)
 	private String sectorName;
-	
+
 	@Column(nullable = false)
 	private String brief;
-	
-	@OneToMany(mappedBy="sector")
+
+	@OneToMany(mappedBy = "sector")
+	@JsonIgnore
 	private List<Company> companies = new ArrayList<>();
 
 	public Long getId() {
 		return id;
 	}
-	
-	protected Sector() {}
-	
-	
+
+	protected Sector() {
+	}
 
 	public Sector(String sectorName, String brief, List<Company> companies) {
 		super();
@@ -66,6 +66,5 @@ public class Sector {
 	public void setCompanies(List<Company> companies) {
 		this.companies = companies;
 	}
-	
-	
+
 }

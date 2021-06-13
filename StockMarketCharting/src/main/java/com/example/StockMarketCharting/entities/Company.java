@@ -15,7 +15,7 @@ import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.Type;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Company {
@@ -31,8 +31,7 @@ public class Company {
 	private double turnover;
 
 	@Column(nullable = false)
-	@JsonProperty("ceo")
-	private String CEO;
+	private String ceo;
 
 	@Column(nullable = false)
 	@Type(type = "text")
@@ -43,25 +42,25 @@ public class Company {
 	private String companyBrief;
 
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "company")
+	@JsonIgnore
 	private IPODetail ipo;
 
 	@OneToMany(mappedBy = "company")
-	private List<StockCode> stockExchageCodes = new ArrayList<>();
+	@JsonIgnore
+	private List<StockCode> stockCodes = new ArrayList<>();
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
 	private Sector sector;
-
-	@OneToMany(mappedBy = "company")
-	private List<StockPrice> stockPrices = new ArrayList<>();
 
 	protected Company() {
 	}
 
-	public Company(String companyName, double turnover, String cEO, String boardOfDirectors, String companyBrief) {
+	public Company(String companyName, double turnover, String ceo, String boardOfDirectors, String companyBrief) {
 		super();
 		this.companyName = companyName;
 		this.turnover = turnover;
-		CEO = cEO;
+		this.ceo = ceo;
 		this.boardOfDirectors = boardOfDirectors;
 		this.companyBrief = companyBrief;
 	}
@@ -78,8 +77,8 @@ public class Company {
 		return turnover;
 	}
 
-	public String getCEO() {
-		return CEO;
+	public String getCeo() {
+		return ceo;
 	}
 
 	public String getBoardOfDirectors() {
@@ -94,16 +93,12 @@ public class Company {
 		return ipo;
 	}
 
-	public List<StockCode> getStockExchageCodes() {
-		return stockExchageCodes;
+	public List<StockCode> getStockCodes() {
+		return stockCodes;
 	}
 
 	public Sector getSector() {
 		return sector;
-	}
-
-	public List<StockPrice> getStockPrices() {
-		return stockPrices;
 	}
 
 	public void setCompanyName(String companyName) {
@@ -114,8 +109,8 @@ public class Company {
 		this.turnover = turnover;
 	}
 
-	public void setCEO(String cEO) {
-		CEO = cEO;
+	public void setCeo(String ceo) {
+		this.ceo = ceo;
 	}
 
 	public void setBoardOfDirectors(String boardOfDirectors) {
@@ -130,16 +125,12 @@ public class Company {
 		this.ipo = ipo;
 	}
 
-	public void setStockExchageCodes(List<StockCode> stockExchageCodes) {
-		this.stockExchageCodes = stockExchageCodes;
+	public void setStockCodes(List<StockCode> stockCodes) {
+		this.stockCodes = stockCodes;
 	}
 
 	public void setSector(Sector sector) {
 		this.sector = sector;
-	}
-
-	public void setStockPrices(List<StockPrice> stockPrices) {
-		this.stockPrices = stockPrices;
 	}
 
 }

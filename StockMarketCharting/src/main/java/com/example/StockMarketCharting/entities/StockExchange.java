@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class StockExchange {
 
@@ -31,29 +33,12 @@ public class StockExchange {
 	private String remarks;
 
 	@ManyToMany(mappedBy = "stockExchanges")
+	@JsonIgnore
 	private List<IPODetail> ipos = new ArrayList<>();
 
 	@OneToMany(mappedBy = "stockExchange")
-	private List<StockPrice> stockPrices = new ArrayList<>();
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public void setStockPrices(List<StockPrice> stockPrices) {
-		this.stockPrices = stockPrices;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public List<StockPrice> getStockPrices() {
-		return stockPrices;
-	}
-
-	@OneToMany(mappedBy = "stockExchange")
-	private List<StockCode> stockExchageCodes = new ArrayList<>();
+	@JsonIgnore
+	private List<StockCode> stockCodes = new ArrayList<>();
 
 	protected StockExchange() {
 	}
@@ -64,6 +49,10 @@ public class StockExchange {
 		this.brief = brief;
 		this.contactAddress = contactAddress;
 		this.remarks = remarks;
+	}
+
+	public Long getId() {
+		return id;
 	}
 
 	public String getStockExchangeName() {
@@ -86,8 +75,8 @@ public class StockExchange {
 		return ipos;
 	}
 
-	public List<StockCode> getStockExchageCodes() {
-		return stockExchageCodes;
+	public List<StockCode> getStockCodes() {
+		return stockCodes;
 	}
 
 	public void setStockExchangeName(String stockExchangeName) {
@@ -110,8 +99,8 @@ public class StockExchange {
 		this.ipos = ipos;
 	}
 
-	public void setStockExchageCodes(List<StockCode> stockExchageCodes) {
-		this.stockExchageCodes = stockExchageCodes;
+	public void setStockCodes(List<StockCode> stockCodes) {
+		this.stockCodes = stockCodes;
 	}
 
 }

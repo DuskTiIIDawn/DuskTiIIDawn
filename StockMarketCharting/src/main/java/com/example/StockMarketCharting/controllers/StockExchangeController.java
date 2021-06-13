@@ -19,12 +19,12 @@ public class StockExchangeController {
 	@Autowired
 	StockExchangeService service;
 
-	@RequestMapping(value = "/stockExchange", method = RequestMethod.GET)
+	@RequestMapping(value = "/stockExchange/getall", method = RequestMethod.GET)
 	@ResponseBody
 	@CrossOrigin("*")
-	public String manageCompanies() {
+	public List<StockExchange> manageCompanies() {
 		List<StockExchange> stockExchangeList = service.findallStockExchange();
-		return "ALL stockExchanges Loaded";
+		return stockExchangeList;
 	}
 
 	@RequestMapping(value = "/stockExchange/add", method = RequestMethod.POST)
