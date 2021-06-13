@@ -16,12 +16,12 @@ public class StockCodeService {
 		stockCodeRepository.save(stockCode);
 	}
 
-	public boolean checkByStockCode(long l) {
-		return stockCodeRepository.findByStockCode(l).size() == 0 ? false : true;
-	}
-
 	public StockCode findByStockCode(long l) {
-		return stockCodeRepository.findByStockCode(l).get(0);
+		boolean isPresent = stockCodeRepository.findByStockCode(l).size() == 0 ? false : true;
+		if (isPresent) {
+			return stockCodeRepository.findByStockCode(l).get(0);
+		} else
+			return null;
 	}
 
 }

@@ -16,8 +16,10 @@ import javax.persistence.OneToOne;
 import org.hibernate.annotations.Type;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
+@JsonIgnoreProperties({ "hibernateLazyInitializer" })
 public class Company {
 
 	@Id

@@ -40,9 +40,9 @@ public class StockPriceController {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 			LocalDateTime dateTime = LocalDateTime.parse(dateTimeStr, formatter);
 
-			boolean isPresent = stockCodeService.checkByStockCode(stockCodeNo);
-			if (isPresent) {
-				StockCode stockCode = stockCodeService.findByStockCode(stockCodeNo);
+			StockCode stockCode = stockCodeService.findByStockCode(stockCodeNo);
+			if (stockCode != null) {
+
 				StockPrice stockPrice = new StockPrice(currentPrice, dateTime);
 				stockPrice.setStockCode(stockCode);
 				service.addStockPrice(stockPrice);

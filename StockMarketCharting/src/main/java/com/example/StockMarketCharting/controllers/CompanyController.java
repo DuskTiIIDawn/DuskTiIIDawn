@@ -1,6 +1,5 @@
 package com.example.StockMarketCharting.controllers;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.StockMarketCharting.entities.Company;
+import com.example.StockMarketCharting.entities.Sector;
 import com.example.StockMarketCharting.entities.StockCode;
 import com.example.StockMarketCharting.entities.StockExchange;
 import com.example.StockMarketCharting.services.CompanyService;
+import com.example.StockMarketCharting.services.SectorService;
 import com.example.StockMarketCharting.services.StockCodeService;
 import com.example.StockMarketCharting.services.StockExchangeService;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -31,6 +32,9 @@ public class CompanyController {
 
 	@Autowired
 	StockExchangeService stockExchangeService;
+
+	@Autowired
+	SectorService sectorService;
 
 	@RequestMapping(value = "/company", method = RequestMethod.GET)
 	@ResponseBody
@@ -80,22 +84,25 @@ public class CompanyController {
 	@ResponseBody
 	@CrossOrigin("*")
 	public Map<String, Object> getDetails(@RequestBody JsonNode jsonNode) {
-
-		Map<String, Object> response = new HashMap<>();
 		Long companyId = jsonNode.get("companyId").asLong();
-		Company company = service.findById(companyId);
-
-		List<StockCode> stockCodes = company.getStockCodes();
-		/*
-		 * 
-		 * List<StockExchange> stockExchanges = new ArrayList<>(); for (StockCode
-		 * stockCode : stockCodes) { stockExchanges.add(stockCode.getStockExchange()); }
-		 */
-		response.put("stockCodes", stockCodes);
-		// response.put("stockExchanges", stockExchanges);
-
-		response.put("company", company);
+		Map<String, Object> response = service.getCompanyDetails(companyId);
 		return response;
+	}
+
+	@RequestMapping(value = "/company/addToSector", method = RequestMethod.POST)
+	@ResponseBody
+	@CrossOrigin("*")
+	public boolean addToSector(@RequestBody JsonNode jsonNode) {
+		Long companyId = jsonNode.get("companyId").asLong();
+		Long sectorId = jsonNode.get("sectorId").asLong();
+		Company company = service.findById(companyId);
+		Sector sector = sectorService.findById(sectorId);
+		if (company != null && sector != null) {
+			company.setSector(sector);
+			sectorService.addSector(sector);
+			return true;
+		}
+		return false;
 	}
 
 }

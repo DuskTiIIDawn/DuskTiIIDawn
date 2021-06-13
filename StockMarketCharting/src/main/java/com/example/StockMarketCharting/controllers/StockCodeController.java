@@ -27,9 +27,8 @@ public class StockCodeController {
 	public Map<String, String> manageCompanies(@RequestBody JsonNode jsonNode) {
 		Map<String, String> response = new HashMap<>();
 		Long stockCodeNo = jsonNode.get("stockCodeNo").asLong();
-		boolean isPresent = service.checkByStockCode(stockCodeNo);
-		if (isPresent) {
-			StockCode stockCode = service.findByStockCode(stockCodeNo);
+		StockCode stockCode = service.findByStockCode(stockCodeNo);
+		if (stockCode != null) {
 			String companyName = stockCode.getCompany().getCompanyName();
 			String StockExchangeName = stockCode.getStockExchange().getStockExchangeName();
 			response.put("isPresent", "YES");
