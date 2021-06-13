@@ -2,6 +2,7 @@ package com.example.StockMarketCharting.entities;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -33,7 +34,7 @@ public class StockCode {
 	@JoinColumn(name = "stock_exchange_id")
 	private StockExchange stockExchange;
 
-	@OneToMany(mappedBy = "stockCode")
+	@OneToMany(mappedBy = "stockCode", cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private List<StockPrice> stockPrices;
 

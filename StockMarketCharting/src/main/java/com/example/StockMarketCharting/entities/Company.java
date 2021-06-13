@@ -3,6 +3,7 @@ package com.example.StockMarketCharting.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -43,11 +44,11 @@ public class Company {
 	@Type(type = "text")
 	private String companyBrief;
 
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "company")
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "company", cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private IPODetail ipo;
 
-	@OneToMany(mappedBy = "company")
+	@OneToMany(mappedBy = "company", cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private List<StockCode> stockCodes = new ArrayList<>();
 

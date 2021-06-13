@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.StockMarketCharting.entities.Company;
 import com.example.StockMarketCharting.entities.Sector;
-import com.example.StockMarketCharting.entities.StockCode;
-import com.example.StockMarketCharting.entities.StockExchange;
 import com.example.StockMarketCharting.services.CompanyService;
 import com.example.StockMarketCharting.services.SectorService;
 import com.example.StockMarketCharting.services.StockCodeService;
@@ -61,24 +59,6 @@ public class CompanyController {
 	 * boolean isUpdated = service.updateCompany(company); if (isUpdated) { return
 	 * "Company Updated"; } else { return "Update Failed"; } }
 	 */
-
-	@RequestMapping(value = "/company/addToStockExchange", method = RequestMethod.POST)
-	@ResponseBody
-	@CrossOrigin("*")
-	public String addStockExchange(@RequestBody JsonNode jsonNode) {
-		Long companyId = jsonNode.get("companyId").asLong();
-		Long stockExchangeId = jsonNode.get("stockExchangeId").asLong();
-		Long stockCodeNo = jsonNode.get("stockCodeNo").asLong();
-		StockExchange stockExchange = stockExchangeService.findById(stockExchangeId);
-		Company company = service.findById(companyId);
-
-		StockCode stockCode = new StockCode(stockCodeNo);
-		stockCode.setCompany(company);
-		stockCode.setStockExchange(stockExchange);
-		stockCode.setStockCode(stockCodeNo);
-		stockCodeService.addStockCode(stockCode);
-		return "Stock Code Added";
-	}
 
 	@RequestMapping(value = "/company/getDetails", method = RequestMethod.POST)
 	@ResponseBody
