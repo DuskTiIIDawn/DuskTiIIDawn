@@ -17,8 +17,7 @@ public class StockCodeService {
 	}
 
 	public StockCode findByStockCode(long l) {
-		boolean isPresent = stockCodeRepository.findByStockCode(l).size() == 0 ? false : true;
-		if (isPresent) {
+		if (stockCodeRepository.findByStockCode(l).size() > 0) {
 			return stockCodeRepository.findByStockCode(l).get(0);
 		} else
 			return null;

@@ -53,22 +53,31 @@ public class StockCodeController {
 	@RequestMapping(value = "/stockCode/add", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin("*")
-	public Boolean addStockCode(@RequestBody JsonNode jsonNode) {
-		boolean response = false;
+	public String addStockCode(@RequestBody JsonNode jsonNode) {
+
+		if (jsonNode.get("companyId") == null || jsonNode.get("stockExchangeId") == null
+				|| jsonNode.get("stockCodeNo") == null) {
+			return "companyId ,stockExchangeId ,and stockCodeNo must not be null";
+		}
 		Long companyId = jsonNode.get("companyId").asLong();
 		Long stockExchangeId = jsonNode.get("stockExchangeId").asLong();
 		Long stockCodeNo = jsonNode.get("stockCodeNo").asLong();
+		StockCode stockCode = service.findByStockCode(stockCodeNo);
+		if (stockCode != null) {
+			return "Error: Please Use different Stock Code No. It already exist";
+		}
 		StockExchange stockExchange = stockExchangeService.findById(stockExchangeId);
 		Company company = companyService.findById(companyId);
 		if (company != null && stockExchange != null) {
-			StockCode stockCode = new StockCode(stockCodeNo);
-			stockCode.setCompany(company);
-			stockCode.setStockExchange(stockExchange);
-			stockCode.setStockCode(stockCodeNo);
-			service.addStockCode(stockCode);
-			response = true;
+			StockCode newstockCode = new StockCode(stockCodeNo);
+			newstockCode.setCompany(company);
+			newstockCode.setStockExchange(stockExchange);
+			newstockCode.setStockCode(stockCodeNo);
+			service.addStockCode(newstockCode);
+			return "Stock Code ADDED";
+		} else {
+			return company == null ? "Company Does Not Exist" : "Stock Exchange Does Not Exist";
 		}
-		return response;
 	}
 
 	@RequestMapping(value = "/stockCode/remove", method = RequestMethod.POST)

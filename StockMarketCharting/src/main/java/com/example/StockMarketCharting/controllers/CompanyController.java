@@ -106,16 +106,6 @@ public class CompanyController {
 
 	}
 
-	/*
-	 * @RequestMapping(value = "/manageCompany/edit", method = RequestMethod.POST)
-	 * 
-	 * @ResponseBody
-	 * 
-	 * @CrossOrigin("*") public String updateCompany(@RequestBody Company company) {
-	 * boolean isUpdated = service.updateCompany(company); if (isUpdated) { return
-	 * "Company Updated"; } else { return "Update Failed"; } }
-	 */
-
 	@RequestMapping(value = "/company/addToSector", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin("*")
@@ -133,6 +123,39 @@ public class CompanyController {
 			return "ADDED TO SECTOR";
 		}
 		return "Company or Sector Does Not Exist";
+	}
+
+	/*
+	 * ADD TO STOCK EXCHANGE BY GIVING STOCK CODE IS IMPLEMENTED IN STOCKCODE
+	 * SERVICE
+	 */
+
+	@RequestMapping(value = "/company/remove", method = RequestMethod.POST)
+	@ResponseBody
+	@CrossOrigin("*")
+	public String add(@RequestBody JsonNode jsonNode) {
+		if (jsonNode.get("companyId") == null) {
+			return "companyId must not be null";
+		}
+		Long companyId = jsonNode.get("companyId").asLong();
+		Company company = service.findById(companyId);
+		if (company != null) {
+			service.removeById(companyId);
+			return "COMPANY REMOVED";
+		}
+		return "COMPANY DOES NOT EXIST";
+	}
+
+	@RequestMapping(value = "/Company/editBasic", method = RequestMethod.POST)
+	@ResponseBody
+	@CrossOrigin("*")
+	public String updateCompany(@RequestBody Company company) {
+		boolean isUpdated = service.updateCompanyBasicInfo(company);
+		if (isUpdated) {
+			return "Company Data Updated";
+		} else {
+			return "Update Failed";
+		}
 	}
 
 }

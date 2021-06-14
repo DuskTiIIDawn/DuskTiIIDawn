@@ -21,15 +21,6 @@ public class CompanyService {
 	public void addCompany(Company company) {
 		companyRepository.save(company);
 	}
-	/*
-	 * public boolean updateCompany(Company company) { Optional<Company> c =
-	 * companyRepository.findById((Long) company.getId()); if (c.isPresent()) {
-	 * Company dataCompany = c.get(); dataCompany = company;
-	 * companyRepository.save(dataCompany); return true; } else { return false; }
-	 * 
-	 * }
-	 * 
-	 */
 
 	public List<Company> findallCompanies() {
 		List<Company> companyList = companyRepository.findAll();
@@ -46,9 +37,27 @@ public class CompanyService {
 
 	}
 
+	public void removeById(long l) {
+		companyRepository.deleteById(l);
+
+	}
+
 	public List<Company> findByCompanyNameContaining(String str) {
 		List<Company> companies = companyRepository.findByCompanyNameContaining(str);
 		return companies;
+
+	}
+
+	public boolean updateCompanyBasicInfo(Company company) {
+		Optional<Company> c = companyRepository.findById((Long) company.getId());
+		if (c.isPresent()) {
+			Company dataRepoCompany = c.get();
+			dataRepoCompany = company;
+			companyRepository.save(dataRepoCompany);
+			return true;
+		} else {
+			return false;
+		}
 
 	}
 
