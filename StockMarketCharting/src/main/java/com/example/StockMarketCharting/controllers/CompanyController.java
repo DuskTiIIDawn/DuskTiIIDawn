@@ -106,23 +106,38 @@ public class CompanyController {
 
 	}
 
-	@RequestMapping(value = "/company/addToSector", method = RequestMethod.POST)
+	@RequestMapping(value = "/company/addOrRemoveSector", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin("*")
-	public String addToSector(@RequestBody JsonNode jsonNode) {
-		if (jsonNode.get("companyId") == null || jsonNode.get("sectorId") == null) {
-			return "companyId and sectorId should not be null";
+	public String addOrRemoveSector(@RequestBody JsonNode jsonNode) {
+
+		if (jsonNode.get("companyId") == null) {
+			return "companyId must not be null";
 		}
+
 		Long companyId = jsonNode.get("companyId").asLong();
-		Long sectorId = jsonNode.get("sectorId").asLong();
 		Company company = service.findById(companyId);
-		Sector sector = sectorService.findById(sectorId);
-		if (company != null && sector != null) {
-			company.setSector(sector);
-			sectorService.addSector(sector);
-			return "ADDED TO SECTOR";
+		if (company == null) {
+			return "Company Does Not  Exist";
 		}
-		return "Company or Sector Does Not Exist";
+
+		if (jsonNode.get("sectorId") == null) {
+			company.setSector(null);
+			service.addCompany(company);
+			return "Company removed from to sector";
+
+		} else {
+			Long sectorId = jsonNode.get("sectorId").asLong();
+			Sector sector = sectorService.findById(sectorId);
+			if (sector != null) {
+				company.setSector(sector);
+				service.addCompany(company);
+			} else {
+				return "Sector Does Not Exist";
+			}
+			return "Company Added to sector";
+		}
+
 	}
 
 	/*
@@ -142,15 +157,16 @@ public class CompanyController {
 		if (company != null) {
 			service.removeById(companyId);
 			return "COMPANY REMOVED";
+		} else {
+			return "COMPANY DOES NOT EXIST";
 		}
-		return "COMPANY DOES NOT EXIST";
 	}
 
-	@RequestMapping(value = "/Company/editBasic", method = RequestMethod.POST)
+	@RequestMapping(value = "/company/editBasic", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin("*")
-	public String updateCompany(@RequestBody Company company) {
-		boolean isUpdated = service.updateCompanyBasicInfo(company);
+	public String editBasicCompany(@RequestBody Company companyBasicData) {
+		boolean isUpdated = service.updateCompanyBasicInfo(companyBasicData);
 		if (isUpdated) {
 			return "Company Data Updated";
 		} else {

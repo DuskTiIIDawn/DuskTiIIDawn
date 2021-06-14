@@ -39,7 +39,6 @@ public class CompanyService {
 
 	public void removeById(long l) {
 		companyRepository.deleteById(l);
-
 	}
 
 	public List<Company> findByCompanyNameContaining(String str) {
@@ -48,11 +47,24 @@ public class CompanyService {
 
 	}
 
-	public boolean updateCompanyBasicInfo(Company company) {
-		Optional<Company> c = companyRepository.findById((Long) company.getId());
+	public List<Company> findBySector_IdAndCompanyNameContaining(Long sectorId, String str) {
+		List<Company> companies = companyRepository.findBySector_IdAndCompanyNameContaining(sectorId, str);
+		return companies;
+
+	}
+
+	public boolean updateCompanyBasicInfo(Company companyBasicData) {
+		Long id = (Long) companyBasicData.getId();
+		if (id == null)
+			return false;
+		Optional<Company> c = companyRepository.findById(id);
 		if (c.isPresent()) {
 			Company dataRepoCompany = c.get();
-			dataRepoCompany = company;
+			dataRepoCompany.setCompanyName(companyBasicData.getCompanyName());
+			dataRepoCompany.setBoardOfDirectors(companyBasicData.getBoardOfDirectors());
+			dataRepoCompany.setCeo(companyBasicData.getCeo());
+			dataRepoCompany.setCompanyBrief(companyBasicData.getCompanyBrief());
+			dataRepoCompany.setTurnover(companyBasicData.getTurnover());
 			companyRepository.save(dataRepoCompany);
 			return true;
 		} else {

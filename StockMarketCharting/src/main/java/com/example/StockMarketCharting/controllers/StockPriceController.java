@@ -37,6 +37,10 @@ public class StockPriceController {
 	public Map<Integer, Boolean> addStockExchange(@RequestBody Map<Integer, JsonNode> requestMap) {
 		Map<Integer, Boolean> response = new HashMap<>();
 		for (Integer dataNo : requestMap.keySet()) {
+			if (requestMap.get(dataNo).get("stockCodeNo") == null) {
+				response.put(dataNo, false);
+				continue;
+			}
 			Long stockCodeNo = requestMap.get(dataNo).get("stockCodeNo").asLong();
 			double currentPrice = requestMap.get(dataNo).get("currentPrice").asDouble();
 			String dateTimeStr = requestMap.get(dataNo).get("dateAndTime").asText();

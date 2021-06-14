@@ -2,6 +2,7 @@ package com.example.StockMarketCharting.controllers;
 
 import static com.monitorjbl.json.Match.match;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.StockMarketCharting.entities.Company;
 import com.example.StockMarketCharting.entities.Sector;
+import com.example.StockMarketCharting.services.CompanyService;
 import com.example.StockMarketCharting.services.SectorService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -28,6 +30,9 @@ public class SectorController {
 
 	@Autowired
 	SectorService sectorService;
+
+	@Autowired
+	CompanyService companyService;
 
 	@RequestMapping(value = "/sector", method = RequestMethod.GET)
 	@ResponseBody
@@ -44,24 +49,56 @@ public class SectorController {
 		return "Sector Added";
 	}
 
+	@RequestMapping(value = "/sector/editBasic", method = RequestMethod.POST)
+	@ResponseBody
+	@CrossOrigin("*")
+	public String editBasicOfSector(@RequestBody Sector sectorBasicData) {
+		boolean isUpdated = sectorService.updateSectorBasicInfo(sectorBasicData);
+		if (isUpdated)
+			return "Sector Eited";
+		else
+			return "Update Failed";
+	}
+
 	@RequestMapping(value = "/sector/getCompanies", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin("*")
-	public String getAllCompanies(@RequestBody JsonNode jsonNode) {
+	public String getAllCompaniesAndFindByString(@RequestBody JsonNode jsonNode) {
+		if (jsonNode.get("sectorId") == null) {
+			return "sectorId must not be null";
+		}
+		List<Company> list = new ArrayList<>();
 		Long sectorId = jsonNode.get("sectorId").asLong();
-		List<Company> companies = sectorService.getCompanies(sectorId);
 
-		String json = "";
-		try {
-			json = mapper.writeValueAsString(
-					JsonView.with(companies).onClass(Company.class, match().exclude("*").include("id", "companyName")));
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (jsonNode.get("search") != null) {
+			String search = jsonNode.get("search").asText();
+			list = companyService.findBySector_IdAndCompanyNameContaining(sectorId, search);
+
+		} else {
+			list = sectorService.getCompaniesBySectorId(sectorId);
 		}
 
-		return json;
+		try {
+			return mapper.writeValueAsString(
+					JsonView.with(list).onClass(Company.class, match().exclude("*").include("id", "companyName")));
+		} catch (JsonProcessingException e) {
+			return e.getMessage();
+		}
 
 	}
 
+	@RequestMapping(value = "/sector/remove", method = RequestMethod.POST)
+	@ResponseBody
+	@CrossOrigin("*")
+	public String deleteSector(@RequestBody JsonNode jsonNode) {
+		if (jsonNode.get("sectorId") == null) {
+			return "sectorId must not be null";
+		}
+		Long sectorId = jsonNode.get("sectorId").asLong();
+		boolean isDeleted = sectorService.deleteSector(sectorId);
+		if (isDeleted)
+			return "DELETED";
+		else
+			return "deletion Failed Please check Sector Id";
+	}
 }
