@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@JsonIgnoreProperties({ "hibernateLazyInitializer" })
+@JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler" }, ignoreUnknown = true)
 public class Sector {
 
 	@Id
@@ -31,18 +31,17 @@ public class Sector {
 	@JsonIgnore
 	private List<Company> companies = new ArrayList<>();
 
-	public Long getId() {
-		return id;
-	}
-
 	protected Sector() {
 	}
 
-	public Sector(String sectorName, String brief, List<Company> companies) {
+	public Sector(String sectorName, String brief) {
 		super();
 		this.sectorName = sectorName;
 		this.brief = brief;
-		this.companies = companies;
+	}
+
+	public Long getId() {
+		return id;
 	}
 
 	public String getSectorName() {

@@ -1,9 +1,6 @@
 package com.example.StockMarketCharting.services;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -12,9 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.StockMarketCharting.entities.Company;
-import com.example.StockMarketCharting.entities.Sector;
-import com.example.StockMarketCharting.entities.StockCode;
-import com.example.StockMarketCharting.entities.StockExchange;
 import com.example.StockMarketCharting.repositories.CompanyRepository;
 
 @Service
@@ -49,30 +43,12 @@ public class CompanyService {
 		} else {
 			return null;
 		}
+
 	}
 
-	@Transactional
-	public Map<String, Object> getCompanyDetails(Long companyId) {
-		Map<String, Object> result = new HashMap<>();
-		Company company = this.findById(companyId);
-		if (company != null) {
-			result.put("company", company);
-			List<StockCode> stockCodes = company.getStockCodes();
-			if (stockCodes.size() > 0) {
-				List<StockExchange> stockExchanges = new ArrayList<>();
-				for (StockCode stockCode : stockCodes) {
-					stockExchanges.add(stockCode.getStockExchange());
-				}
-				result.put("stockCodes", stockCodes);
-				result.put("stockExchanges", stockExchanges);
-			}
-			Sector sector = company.getSector();
-			if (sector != null) {
-				result.put("sector", sector);
-			}
-
-		}
-		return result;
+	public List<Company> findByCompanyNameContaining(String str) {
+		List<Company> companies = companyRepository.findByCompanyNameContaining(str);
+		return companies;
 
 	}
 

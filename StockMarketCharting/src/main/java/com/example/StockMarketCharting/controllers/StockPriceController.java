@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 @Controller
 public class StockPriceController {
+	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
 	@Autowired
 	StockPriceService service;
@@ -39,7 +40,6 @@ public class StockPriceController {
 			Long stockCodeNo = requestMap.get(dataNo).get("stockCodeNo").asLong();
 			double currentPrice = requestMap.get(dataNo).get("currentPrice").asDouble();
 			String dateTimeStr = requestMap.get(dataNo).get("dateAndTime").asText();
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 			LocalDateTime dateTime = LocalDateTime.parse(dateTimeStr, formatter);
 			StockCode stockCode = stockCodeService.findByStockCode(stockCodeNo);
 			if (stockCode != null) {
@@ -60,7 +60,16 @@ public class StockPriceController {
 	@CrossOrigin("*")
 	public List<StockPrice> getByStockCode(@RequestBody JsonNode jsonNode) {
 		Long stockCodeNo = jsonNode.get("stockCodeNo").asLong();
-		return stockCodeService.getStockPricesByStockCode(stockCodeNo);
+		Long stockCodeId = stockCodeService.findByStockCode(stockCodeNo).getId();
+		if (jsonNode.get("startDateTime") != null && jsonNode.get("endDateTime") != null) {
+			String startDateTimeStr = jsonNode.get("startDateTime").asText();
+			String endDateTimeStr = jsonNode.get("endDateTime").asText();
+			LocalDateTime startDateTime = LocalDateTime.parse(startDateTimeStr, formatter);
+			LocalDateTime endDateTime = LocalDateTime.parse(endDateTimeStr, formatter);
+			return service.findByStockCode_IdAndBetweenDateTime(stockCodeId, startDateTime, endDateTime);
+
+		}
+		return service.findByStockCode_Id(stockCodeId);
 
 	}
 
