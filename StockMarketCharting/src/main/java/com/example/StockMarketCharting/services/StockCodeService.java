@@ -1,5 +1,7 @@
 package com.example.StockMarketCharting.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,20 @@ public class StockCodeService {
 	public StockCode findByStockCode(long l) {
 		if (stockCodeRepository.findByStockCode(l).size() > 0) {
 			return stockCodeRepository.findByStockCode(l).get(0);
+		} else
+			return null;
+	}
+
+	public List<StockCode> findByCompanyId(long l) {
+		if (stockCodeRepository.findByCompany_Id(l).size() > 0) {
+			return stockCodeRepository.findByCompany_Id(l);
+		} else
+			return null;
+	}
+
+	public List<StockCode> findByStockExchangeId(long l) {
+		if (stockCodeRepository.findByStockExchange_Id(l).size() > 0) {
+			return stockCodeRepository.findByStockExchange_Id(l);
 		} else
 			return null;
 	}

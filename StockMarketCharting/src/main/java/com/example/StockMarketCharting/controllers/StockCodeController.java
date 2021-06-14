@@ -1,7 +1,9 @@
 package com.example.StockMarketCharting.controllers;
 
-import java.util.HashMap;
-import java.util.Map;
+import static com.monitorjbl.json.Match.match;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,10 +19,16 @@ import com.example.StockMarketCharting.entities.StockExchange;
 import com.example.StockMarketCharting.services.CompanyService;
 import com.example.StockMarketCharting.services.StockCodeService;
 import com.example.StockMarketCharting.services.StockExchangeService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.monitorjbl.json.JsonView;
+import com.monitorjbl.json.JsonViewModule;
 
 @Controller
 public class StockCodeController {
+	private ObjectMapper mapper = new ObjectMapper().registerModules(new JsonViewModule(), new JavaTimeModule());
 
 	@Autowired
 	StockCodeService service;
@@ -31,23 +39,61 @@ public class StockCodeController {
 	@Autowired
 	CompanyService companyService;
 
+	@RequestMapping(value = "/stockCode/getAll", method = RequestMethod.POST)
+	@ResponseBody
+	@CrossOrigin("*")
+	public String getAllByCompanyIdOrStockExchangeId(@RequestBody JsonNode jsonNode) {
+		List<StockCode> stockCodes = new ArrayList<>();
+		String json = null;
+		if (jsonNode.get("companyId") != null) {
+			Long companyId = jsonNode.get("companyId").asLong();
+			stockCodes = service.findByCompanyId(companyId);
+			try {
+				json = mapper.writeValueAsString(
+						JsonView.with(stockCodes).onClass(StockCode.class, match().include("stockExchange"))
+								.onClass(StockExchange.class, match().exclude("*").include("id", "stockExchangeName")));
+			} catch (JsonProcessingException e) {
+				return e.getMessage();
+			}
+		} else if (jsonNode.get("stockExchangeId") != null) {
+			Long stockExchangeId = jsonNode.get("stockExchangeId").asLong();
+			stockCodes = service.findByStockExchangeId(stockExchangeId);
+			try {
+				json = mapper.writeValueAsString(
+						JsonView.with(stockCodes).onClass(StockCode.class, match().include("company"))
+								.onClass(Company.class, match().exclude("*").include("id", "companyName")));
+			} catch (JsonProcessingException e) {
+				return e.getMessage();
+			}
+		}
+
+		return json;
+	}
+
 	@RequestMapping(value = "/stockCode/getInfo", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin("*")
-	public Map<String, String> getInfo(@RequestBody JsonNode jsonNode) {
-		Map<String, String> response = new HashMap<>();
+	public String getInfo(@RequestBody JsonNode jsonNode) {
+		if (jsonNode.get("stockCodeNo") == null) {
+			return "stockCodeNo must not be null";
+		}
 		Long stockCodeNo = jsonNode.get("stockCodeNo").asLong();
 		StockCode stockCode = service.findByStockCode(stockCodeNo);
 		if (stockCode != null) {
-			String companyName = stockCode.getCompany().getCompanyName();
-			String StockExchangeName = stockCode.getStockExchange().getStockExchangeName();
-			response.put("isPresent", "YES");
-			response.put("companyName", companyName);
-			response.put("stockExchangeName", StockExchangeName);
+			try {
+				String json = mapper.writeValueAsString(
+						JsonView.with(stockCode).onClass(StockCode.class, match().include("company", "stockExchange"))
+								.onClass(Company.class, match().exclude("*").include("id", "companyName"))
+								.onClass(StockExchange.class, match().exclude("*").include("id", "stockExchangeName")));
+				return json;
+			} catch (JsonProcessingException e) {
+
+				return e.getMessage();
+			}
 		} else {
-			response.put("isPresent", "NO");
+			return "No records Available for this Stock Code No";
 		}
-		return response;
+
 	}
 
 	@RequestMapping(value = "/stockCode/add", method = RequestMethod.POST)
