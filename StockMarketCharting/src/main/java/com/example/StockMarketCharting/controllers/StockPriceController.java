@@ -1,10 +1,14 @@
 package com.example.StockMarketCharting.controllers;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -74,6 +78,34 @@ public class StockPriceController {
 
 		}
 		return service.findByStockCode_Id(stockCodeId);
+
+	}
+
+	@RequestMapping(value = "/stockPrice/missingRecords", method = RequestMethod.POST)
+	@ResponseBody
+	@CrossOrigin("*")
+	public List<LocalDate> getMissingRecordsByStockCode(@RequestBody JsonNode jsonNode) {
+		List<LocalDate> listOfDatesMissing = new ArrayList<>();
+		Long stockCodeNo = jsonNode.get("stockCodeNo").asLong();
+		StockCode stockCode = stockCodeService.findByStockCode(stockCodeNo);
+		if (stockCode == null)
+			return listOfDatesMissing;
+		Long stockCodeId = stockCode.getId();
+		if (jsonNode.get("startDateTime") != null && jsonNode.get("endDateTime") != null) {
+			String startDateTimeStr = jsonNode.get("startDateTime").asText();
+			String endDateTimeStr = jsonNode.get("endDateTime").asText();
+			LocalDate startDate = LocalDateTime.parse(startDateTimeStr, formatter).toLocalDate();
+			LocalDate endDate = LocalDateTime.parse(endDateTimeStr, formatter).toLocalDate();
+			Set<Date> setOfDatesExist = service.findDatesWhereRecordExist(startDate, endDate, stockCodeId);
+			while (!startDate.isAfter(endDate)) {
+				if (!setOfDatesExist.contains(Date.valueOf(startDate))) {
+					listOfDatesMissing.add(startDate);
+				}
+				startDate = startDate.plusDays(1);
+			}
+			return listOfDatesMissing;
+		}
+		return listOfDatesMissing;
 
 	}
 

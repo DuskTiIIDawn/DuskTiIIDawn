@@ -41,8 +41,7 @@ public class IPODetailService {
 	}
 
 	@Transactional
-	public boolean addIPO(Long companyId, List<Long> stockExchangeIds, IPODetail ipoDetail) {
-		boolean result = false;
+	public String addIPO(Long companyId, List<Long> stockExchangeIds, IPODetail ipoDetail) {
 		List<StockExchange> stockExchanges = new ArrayList<StockExchange>();
 		for (Long stockExchangeId : stockExchangeIds) {
 			StockExchange stockExchange = stockExchangeService.findById(stockExchangeId);
@@ -52,17 +51,20 @@ public class IPODetailService {
 		}
 		ipoDetail.setStockExchanges(stockExchanges);
 		Company company = companyService.findById(companyId);
-		if (company != null && company.getIpo() == null) {
+		if (company == null) {
+			return "Company Does Not Exist";
+		} else if (company.getIpo() != null) {
+			return "This Company Already has an IPO";
+		} else {
 			ipoDetail.setCompany(company);
+			ipoDetailRepository.save(ipoDetail);
+			return "IPO ADDED";
 		}
-		ipoDetailRepository.save(ipoDetail);
-		result = true;
-		return result;
+
 	}
 
 	@Transactional
-	public boolean UpdateIPO(Long companyId, List<Long> stockExchangeIds, IPODetail ipoDetailData, Long ipoDetailId) {
-		boolean result = false;
+	public String UpdateIPO(Long companyId, List<Long> stockExchangeIds, IPODetail ipoDetailData, Long ipoDetailId) {
 		IPODetail ipoDetail = this.findById(ipoDetailId);
 		if (ipoDetail != null) {
 			ipoDetail.setTotalNumberOfShares(ipoDetailData.getTotalNumberOfShares());
@@ -77,14 +79,19 @@ public class IPODetailService {
 			}
 			ipoDetail.setStockExchanges(stockExchanges);
 			Company company = companyService.findById(companyId);
-			if (company != null && ipoDetail.getCompany().getId() != companyId && company.getIpo() == null) {
+			if (company == null) {
+				return "Company Does Not Exist";
+			} else if (company.getIpo() != null && company.getIpo().getId() != ipoDetailId) {
+				return "This Company Already has an IPO";
+			} else {
 				ipoDetail.setCompany(company);
+				ipoDetailRepository.save(ipoDetail);
+				return "IPO UPDATED";
 			}
-			ipoDetailRepository.save(ipoDetail);
-			result = true;
+		} else {
+			return "IPO with this ipodetailId does not exist";
 		}
 
-		return result;
 	}
 
 	public boolean removeIPO(Long ipoDetailId) {

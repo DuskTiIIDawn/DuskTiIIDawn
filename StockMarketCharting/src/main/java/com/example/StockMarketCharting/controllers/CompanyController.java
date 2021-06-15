@@ -57,14 +57,14 @@ public class CompanyController {
 		} else {
 			list = service.findallCompanies();
 		}
-		String json;
+
 		try {
-			json = mapper.writeValueAsString(
+			return mapper.writeValueAsString(
 					JsonView.with(list).onClass(Company.class, match().exclude("*").include("id", "companyName")));
 		} catch (JsonProcessingException e) {
-			json = "error";
+			return e.getMessage();
 		}
-		return json;
+
 	}
 
 	@RequestMapping(value = "/company/getDetails", method = RequestMethod.POST)
@@ -79,9 +79,9 @@ public class CompanyController {
 		if (company == null) {
 			return "Company Does Not Exist";
 		}
-		String json;
+
 		try {
-			json = mapper.writeValueAsString(
+			return mapper.writeValueAsString(
 					JsonView.with(company).onClass(Company.class, match().include("stockCodes", "ipo", "sector"))
 							.onClass(Sector.class, match().exclude("*").include("sectorName", "id"))
 							.onClass(StockCode.class, match().include("stockExchange"))
@@ -89,7 +89,6 @@ public class CompanyController {
 		} catch (JsonProcessingException e) {
 			return e.getMessage();
 		}
-		return json;
 
 	}
 
@@ -104,6 +103,18 @@ public class CompanyController {
 			return e.getMessage();
 		}
 
+	}
+
+	@RequestMapping(value = "/company/editBasic", method = RequestMethod.POST)
+	@ResponseBody
+	@CrossOrigin("*")
+	public String editBasicCompany(@RequestBody Company companyBasicData) {
+		boolean isUpdated = service.updateCompanyBasicInfo(companyBasicData);
+		if (isUpdated) {
+			return "Company Data Updated";
+		} else {
+			return "Update Failed";
+		}
 	}
 
 	@RequestMapping(value = "/company/addOrRemoveSector", method = RequestMethod.POST)
@@ -159,18 +170,6 @@ public class CompanyController {
 			return "COMPANY REMOVED";
 		} else {
 			return "COMPANY DOES NOT EXIST";
-		}
-	}
-
-	@RequestMapping(value = "/company/editBasic", method = RequestMethod.POST)
-	@ResponseBody
-	@CrossOrigin("*")
-	public String editBasicCompany(@RequestBody Company companyBasicData) {
-		boolean isUpdated = service.updateCompanyBasicInfo(companyBasicData);
-		if (isUpdated) {
-			return "Company Data Updated";
-		} else {
-			return "Update Failed";
 		}
 	}
 

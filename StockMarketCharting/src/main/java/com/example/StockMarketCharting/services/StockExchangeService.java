@@ -32,4 +32,23 @@ public class StockExchangeService {
 			return null;
 		}
 	}
+
+	public boolean updateStockExchangeBasicInfo(StockExchange stockExchangeData) {
+		Long id = (Long) stockExchangeData.getId();
+		if (id == null)
+			return false;
+		Optional<StockExchange> s = stockExchangeRepository.findById(id);
+		if (s.isPresent()) {
+			StockExchange dataRepoStockExchange = s.get();
+			dataRepoStockExchange.setStockExchangeName(stockExchangeData.getStockExchangeName());
+			dataRepoStockExchange.setBrief(stockExchangeData.getBrief());
+			dataRepoStockExchange.setContactAddress(stockExchangeData.getContactAddress());
+			dataRepoStockExchange.setRemarks(stockExchangeData.getRemarks());
+			stockExchangeRepository.save(dataRepoStockExchange);
+			return true;
+		} else {
+			return false;
+		}
+
+	}
 }

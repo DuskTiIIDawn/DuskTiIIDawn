@@ -44,12 +44,12 @@ public class StockCodeController {
 	@CrossOrigin("*")
 	public String getAllByCompanyIdOrStockExchangeId(@RequestBody JsonNode jsonNode) {
 		List<StockCode> stockCodes = new ArrayList<>();
-		String json = null;
+
 		if (jsonNode.get("companyId") != null) {
 			Long companyId = jsonNode.get("companyId").asLong();
 			stockCodes = service.findByCompanyId(companyId);
 			try {
-				json = mapper.writeValueAsString(
+				return mapper.writeValueAsString(
 						JsonView.with(stockCodes).onClass(StockCode.class, match().include("stockExchange"))
 								.onClass(StockExchange.class, match().exclude("*").include("id", "stockExchangeName")));
 			} catch (JsonProcessingException e) {
@@ -59,15 +59,16 @@ public class StockCodeController {
 			Long stockExchangeId = jsonNode.get("stockExchangeId").asLong();
 			stockCodes = service.findByStockExchangeId(stockExchangeId);
 			try {
-				json = mapper.writeValueAsString(
+				return mapper.writeValueAsString(
 						JsonView.with(stockCodes).onClass(StockCode.class, match().include("company"))
 								.onClass(Company.class, match().exclude("*").include("id", "companyName")));
 			} catch (JsonProcessingException e) {
 				return e.getMessage();
 			}
+		} else {
+			return "Please provide  either companyId or StockExchangeId";
 		}
 
-		return json;
 	}
 
 	@RequestMapping(value = "/stockCode/getInfo", method = RequestMethod.POST)
@@ -81,11 +82,11 @@ public class StockCodeController {
 		StockCode stockCode = service.findByStockCode(stockCodeNo);
 		if (stockCode != null) {
 			try {
-				String json = mapper.writeValueAsString(
+				return mapper.writeValueAsString(
 						JsonView.with(stockCode).onClass(StockCode.class, match().include("company", "stockExchange"))
 								.onClass(Company.class, match().exclude("*").include("id", "companyName"))
 								.onClass(StockExchange.class, match().exclude("*").include("id", "stockExchangeName")));
-				return json;
+
 			} catch (JsonProcessingException e) {
 
 				return e.getMessage();
