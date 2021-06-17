@@ -26,7 +26,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 @Controller
 public class StockPriceController {
-	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yy H:m:s");
 
 	@Autowired
 	StockPriceService service;
@@ -38,28 +38,35 @@ public class StockPriceController {
 	@RequestMapping(value = "/stockPrice/upload", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin("*")
-	public Map<Integer, Boolean> addStockExchange(@RequestBody Map<Integer, JsonNode> requestMap) {
-		Map<Integer, Boolean> response = new HashMap<>();
-		for (Integer dataNo : requestMap.keySet()) {
-			if (requestMap.get(dataNo).get("stockCodeNo") == null) {
-				response.put(dataNo, false);
-				continue;
-			}
+	public Map<String, Object> addStockExchange(@RequestBody Map<String, JsonNode> requestMap) {
+		Map<String, Object> response = new HashMap<>();
+		int cnt = 0;
+		for (String dataNo : requestMap.keySet()) {
 			Long stockCodeNo = requestMap.get(dataNo).get("stockCodeNo").asLong();
 			double currentPrice = requestMap.get(dataNo).get("currentPrice").asDouble();
 			String dateTimeStr = requestMap.get(dataNo).get("dateAndTime").asText();
-			LocalDateTime dateTime = LocalDateTime.parse(dateTimeStr, formatter);
+			LocalDateTime dateTime = null;
+
+			try {
+				dateTime = LocalDateTime.parse(dateTimeStr, formatter);
+			} catch (Exception e) {
+				response.put(dataNo, "Date Time Format Incorrect");
+				continue;
+			}
+
 			StockCode stockCode = stockCodeService.findByStockCode(stockCodeNo);
 			if (stockCode != null) {
 				StockPrice stockPrice = new StockPrice(currentPrice, dateTime);
 				stockPrice.setStockCode(stockCode);
 				service.addStockPrice(stockPrice);
-				response.put(dataNo, true);
+				response.put(dataNo, "Updated Successfully");
+				cnt += 1;
 			} else {
-				response.put(dataNo, false);
+				response.put(dataNo, "Failed Stock Code Does Not Exist in Record");
 			}
 
 		}
+		response.put("count", cnt);
 		return response;
 	}
 

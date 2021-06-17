@@ -69,6 +69,20 @@ public class CompanyController {
 
 	}
 
+	@RequestMapping(value = "/company/getAllName", method = RequestMethod.GET)
+	@ResponseBody
+	@CrossOrigin("*")
+	public String getAllCompanyNameList() {
+		List<Company> list = service.findallCompanies();
+		try {
+			return mapper.writeValueAsString(
+					JsonView.with(list).onClass(Company.class, match().exclude("*").include("id", "companyName")));
+		} catch (JsonProcessingException e) {
+			return e.getMessage();
+		}
+
+	}
+
 	@RequestMapping(value = "/company/getDetails", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin("*")
@@ -89,6 +103,26 @@ public class CompanyController {
 							.onClass(StockCode.class, match().include("stockExchange"))
 							.onClass(IPODetail.class, match().include("stockExchanges"))
 							.onClass(StockExchange.class, match().exclude("*").include("id", "stockExchangeName")));
+		} catch (JsonProcessingException e) {
+			return e.getMessage();
+		}
+
+	}
+
+	@RequestMapping(value = "/company/getBasicInfo", method = RequestMethod.POST)
+	@ResponseBody
+	@CrossOrigin("*")
+	public String getBasicInfo(@RequestBody JsonNode jsonNode) {
+		if (jsonNode.get("companyId") == null) {
+			return "companyId Property Should Not be NULL";
+		}
+		Long companyId = jsonNode.get("companyId").asLong();
+		Company company = service.findById(companyId);
+		if (company == null) {
+			return "Company Does Not Exist";
+		}
+		try {
+			return mapper.writeValueAsString(company);
 		} catch (JsonProcessingException e) {
 			return e.getMessage();
 		}
@@ -156,7 +190,7 @@ public class CompanyController {
 
 	/*
 	 * ADD TO STOCK EXCHANGE BY GIVING STOCK CODE IS IMPLEMENTED IN STOCKCODE
-	 * SERVICE
+	 * Controller
 	 */
 
 	@RequestMapping(value = "/company/remove", method = RequestMethod.POST)

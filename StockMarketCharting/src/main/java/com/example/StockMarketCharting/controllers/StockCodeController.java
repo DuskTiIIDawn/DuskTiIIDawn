@@ -45,28 +45,34 @@ public class StockCodeController {
 	public String getAllByCompanyIdOrStockExchangeId(@RequestBody JsonNode jsonNode) {
 		List<StockCode> stockCodes = new ArrayList<>();
 
-		if (jsonNode.get("companyId") != null) {
+		if (jsonNode.get("companyId") != null && jsonNode.get("stockExchangeId") == null) {
 			Long companyId = jsonNode.get("companyId").asLong();
 			stockCodes = service.findByCompanyId(companyId);
-			try {
-				return mapper.writeValueAsString(
-						JsonView.with(stockCodes).onClass(StockCode.class, match().include("stockExchange"))
-								.onClass(StockExchange.class, match().exclude("*").include("id", "stockExchangeName")));
-			} catch (JsonProcessingException e) {
-				return e.getMessage();
-			}
-		} else if (jsonNode.get("stockExchangeId") != null) {
+
+		} else if (jsonNode.get("stockExchangeId") != null && jsonNode.get("companyId") == null) {
 			Long stockExchangeId = jsonNode.get("stockExchangeId").asLong();
 			stockCodes = service.findByStockExchangeId(stockExchangeId);
-			try {
-				return mapper.writeValueAsString(
-						JsonView.with(stockCodes).onClass(StockCode.class, match().include("company"))
-								.onClass(Company.class, match().exclude("*").include("id", "companyName")));
-			} catch (JsonProcessingException e) {
-				return e.getMessage();
-			}
+
+		} else if (jsonNode.get("stockExchangeId") != null && jsonNode.get("companyId") != null) {
+
+			stockCodes = service.findByStockExchangeIdAndCompanyId(jsonNode.get("stockExchangeId").asLong(),
+					jsonNode.get("companyId").asLong());
+
 		} else {
-			return "Please provide  either companyId or StockExchangeId";
+			stockCodes = service.findAll();
+
+		}
+
+		try {
+			if (stockCodes == null)
+				stockCodes = new ArrayList<>();
+
+			return mapper.writeValueAsString(
+					JsonView.with(stockCodes).onClass(StockCode.class, match().include("company", "stockExchange"))
+							.onClass(Company.class, match().exclude("*").include("id", "companyName"))
+							.onClass(StockExchange.class, match().exclude("*").include("id", "stockExchangeName")));
+		} catch (JsonProcessingException e) {
+			return e.getMessage();
 		}
 
 	}
@@ -97,25 +103,36 @@ public class StockCodeController {
 
 	}
 
-	@RequestMapping(value = "/stockCode/add", method = RequestMethod.POST)
+	@RequestMapping(value = "/stockCode/addUpdate", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin("*")
 	public String addStockCode(@RequestBody JsonNode jsonNode) {
 
-		if (jsonNode.get("companyId") == null || jsonNode.get("stockExchangeId") == null
-				|| jsonNode.get("stockCodeNo") == null) {
-			return "companyId ,stockExchangeId ,and stockCodeNo must not be null";
+		if (jsonNode.get("stockCodeNo") == null) {
+			return "StockCodeNo Required";
 		}
-		Long companyId = jsonNode.get("companyId").asLong();
-		Long stockExchangeId = jsonNode.get("stockExchangeId").asLong();
 		Long stockCodeNo = jsonNode.get("stockCodeNo").asLong();
 		StockCode stockCode = service.findByStockCode(stockCodeNo);
 		if (stockCode != null) {
 			return "Error: Please Use different Stock Code No. It already exist";
 		}
+		if (jsonNode.get("stockCodeId") != null) {
+			Long stockCodeId = jsonNode.get("stockCodeId").asLong();
+			StockCode stockCodeRepo = service.findByStockCodeId(stockCodeId);
+			stockCodeRepo.setStockCode(stockCodeNo);
+			service.addStockCode(stockCodeRepo);
+			return "Stock Code Updated";
+		}
+
+		if (jsonNode.get("companyId") == null || jsonNode.get("stockExchangeId") == null) {
+			return "companyId ,stockExchangeId  must not be null";
+		}
+		Long companyId = jsonNode.get("companyId").asLong();
+		Long stockExchangeId = jsonNode.get("stockExchangeId").asLong();
+
 		StockExchange stockExchange = stockExchangeService.findById(stockExchangeId);
 		Company company = companyService.findById(companyId);
-		if (company != null && stockExchange != null) {
+		if (company != null && stockExchange != null && jsonNode.get("stockCodeId") == null) {
 			StockCode newstockCode = new StockCode(stockCodeNo);
 			newstockCode.setCompany(company);
 			newstockCode.setStockExchange(stockExchange);
@@ -130,9 +147,13 @@ public class StockCodeController {
 	@RequestMapping(value = "/stockCode/remove", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin("*")
-	public Boolean removeStockCode(@RequestBody JsonNode jsonNode) {
+	public String removeStockCode(@RequestBody JsonNode jsonNode) {
 		Long stockCodeId = jsonNode.get("stockCodeId").asLong();
-		return service.removeStockCode(stockCodeId);
+		if (service.removeStockCode(stockCodeId)) {
+			return "Stock Code Removed";
+		} else {
+			return "Request To remove failed";
+		}
 	}
 
 }

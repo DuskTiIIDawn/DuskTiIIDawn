@@ -16,4 +16,6 @@ public interface StockCodeRepository extends JpaRepository<StockCode, Long> {
 
 	List<StockCode> findByStockExchange_Id(Long stockExchangeId);
 
+	List<StockCode> findByStockExchange_IdAndCompany_Id(Long stockExchangeId, Long companyId);
+
 }
