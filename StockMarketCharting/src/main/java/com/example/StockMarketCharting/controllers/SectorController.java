@@ -55,7 +55,7 @@ public class SectorController {
 	public String editBasicOfSector(@RequestBody Sector sectorBasicData) {
 		boolean isUpdated = sectorService.updateSectorBasicInfo(sectorBasicData);
 		if (isUpdated)
-			return "Sector Eited";
+			return "Sector Edited";
 		else
 			return "Update Failed";
 	}
@@ -77,7 +77,8 @@ public class SectorController {
 		} else {
 			list = sectorService.getCompaniesBySectorId(sectorId);
 		}
-
+		if (list == null)
+			list = new ArrayList<Company>();
 		try {
 			return mapper.writeValueAsString(
 					JsonView.with(list).onClass(Company.class, match().exclude("*").include("id", "companyName")));

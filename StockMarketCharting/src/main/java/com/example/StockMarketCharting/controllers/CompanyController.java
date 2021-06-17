@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.StockMarketCharting.entities.Company;
+import com.example.StockMarketCharting.entities.IPODetail;
 import com.example.StockMarketCharting.entities.Sector;
 import com.example.StockMarketCharting.entities.StockCode;
 import com.example.StockMarketCharting.entities.StockExchange;
@@ -44,7 +45,7 @@ public class CompanyController {
 	@Autowired
 	SectorService sectorService;
 
-	@RequestMapping(value = "/company", method = RequestMethod.GET)
+	@RequestMapping(value = "/company", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin("*")
 	public String getAllCompanyOrSearchByString(@RequestBody JsonNode jsonNode) {
@@ -59,8 +60,9 @@ public class CompanyController {
 		}
 
 		try {
-			return mapper.writeValueAsString(
-					JsonView.with(list).onClass(Company.class, match().exclude("*").include("id", "companyName")));
+			return mapper.writeValueAsString(JsonView.with(list)
+					.onClass(Company.class, match().exclude("*").include("id", "companyName", "sector"))
+					.onClass(Sector.class, match().exclude("*").include("id", "sectorName")));
 		} catch (JsonProcessingException e) {
 			return e.getMessage();
 		}
@@ -85,6 +87,7 @@ public class CompanyController {
 					JsonView.with(company).onClass(Company.class, match().include("stockCodes", "ipo", "sector"))
 							.onClass(Sector.class, match().exclude("*").include("sectorName", "id"))
 							.onClass(StockCode.class, match().include("stockExchange"))
+							.onClass(IPODetail.class, match().include("stockExchanges"))
 							.onClass(StockExchange.class, match().exclude("*").include("id", "stockExchangeName")));
 		} catch (JsonProcessingException e) {
 			return e.getMessage();
