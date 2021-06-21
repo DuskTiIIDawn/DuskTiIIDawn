@@ -34,7 +34,7 @@ public class StockCode {
 	@JoinColumn(name = "stock_exchange_id")
 	private StockExchange stockExchange;
 
-	@OneToMany(mappedBy = "stockCode", cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "stockCode", orphanRemoval = true, cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private List<StockPrice> stockPrices;
 
