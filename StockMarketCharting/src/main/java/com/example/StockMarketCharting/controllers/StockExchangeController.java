@@ -59,9 +59,30 @@ public class StockExchangeController {
 		try {
 			return mapper.writeValueAsString(
 					JsonView.with(stockExchange).onClass(StockExchange.class, match().include("stockCodes", "ipos"))
-							.onClass(StockCode.class, match().exclude("*").include("id", "company"))
-							.onClass(IPODetail.class, match().exclude("*").include("id", "pricePerShare", "company"))
+							.onClass(StockCode.class, match().exclude("*").include("id", "stockCode", "company"))
+							.onClass(IPODetail.class,
+									match().exclude("*").include("id", "pricePerShare", "totalNumberOfShares",
+											"openDateTime", "company"))
 							.onClass(Company.class, match().exclude("*").include("id", "companyName")));
+		} catch (JsonProcessingException e) {
+			return e.getMessage();
+		}
+	}
+
+	@RequestMapping(value = "/stockExchange/getBasicInfo", method = RequestMethod.POST)
+	@ResponseBody
+	@CrossOrigin("*")
+	public String manageStockExchangeGetBasicInfo(@RequestBody JsonNode jsonNode) {
+		if (jsonNode.get("stockExchangeId") == null) {
+			return "stockExchangeId must Not be null";
+		}
+		Long stockExchangeId = jsonNode.get("stockExchangeId").asLong();
+		StockExchange stockExchange = service.findById(stockExchangeId);
+		if (stockExchange == null) {
+			return "Stock Exchange Does Not Exist";
+		}
+		try {
+			return mapper.writeValueAsString(stockExchange);
 		} catch (JsonProcessingException e) {
 			return e.getMessage();
 		}

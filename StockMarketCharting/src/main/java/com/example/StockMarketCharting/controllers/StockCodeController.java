@@ -60,13 +60,8 @@ public class StockCodeController {
 
 		} else {
 			stockCodes = service.findAll();
-
 		}
-
 		try {
-			if (stockCodes == null)
-				stockCodes = new ArrayList<>();
-
 			return mapper.writeValueAsString(
 					JsonView.with(stockCodes).onClass(StockCode.class, match().include("company", "stockExchange"))
 							.onClass(Company.class, match().exclude("*").include("id", "companyName"))

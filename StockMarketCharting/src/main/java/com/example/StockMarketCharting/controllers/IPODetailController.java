@@ -41,7 +41,8 @@ public class IPODetailController {
 		List<IPODetail> ipoList = service.findallIPO();
 
 		try {
-			return mapper.writeValueAsString(JsonView.with(ipoList).onClass(IPODetail.class, match().include("company"))
+			return mapper.writeValueAsString(JsonView.with(ipoList)
+					.onClass(IPODetail.class, match().exclude("totalNumberOfShares").include("company"))
 					.onClass(Company.class, match().exclude("*").include("companyName", "id")));
 		} catch (JsonProcessingException e) {
 			return e.getMessage();
@@ -77,13 +78,17 @@ public class IPODetailController {
 	@ResponseBody
 	@CrossOrigin("*")
 	public String addOrUpdateIPO(@RequestBody JsonNode requestMap) {
+		if (requestMap.get("pricePerShare") == null || requestMap.get("totalNumberOfShares") == null
+				|| requestMap.get("openDateTime") == null) {
+			return "Error with the data details";
+		}
 
 		Double pricePerShare = requestMap.get("pricePerShare").asDouble();
-		Long totalNoOfShares = requestMap.get("totalNoOfShares").asLong();
+		Long totalNoOfShares = requestMap.get("totalNumberOfShares").asLong();
 		String openDateTimestr = requestMap.get("openDateTime").asText();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d H:m");
 		LocalDateTime openDateTime = LocalDateTime.parse(openDateTimestr, formatter);
-		Long companyId = requestMap.get("companyId").asLong();
+
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.enable(DeserializationFeature.USE_LONG_FOR_INTS);
 		List<Long> stockExchangeIds = objectMapper.convertValue(requestMap.get("stockExchangeIds"), ArrayList.class);
@@ -91,11 +96,15 @@ public class IPODetailController {
 		IPODetail ipoDetail = new IPODetail(pricePerShare, totalNoOfShares, openDateTime);
 
 		if (requestMap.get("ipoDetailId") == null) {
+			if (requestMap.get("companyId") == null) {
+				return "companyId must not be null";
+			}
+			Long companyId = requestMap.get("companyId").asLong();
 			return service.addIPO(companyId, stockExchangeIds, ipoDetail);
 
 		} else {
 			Long ipoDetailId = requestMap.get("ipoDetailId").asLong();
-			return service.UpdateIPO(companyId, stockExchangeIds, ipoDetail, ipoDetailId);
+			return service.UpdateIPO(stockExchangeIds, ipoDetail, ipoDetailId);
 		}
 
 	}
@@ -103,11 +112,14 @@ public class IPODetailController {
 	@RequestMapping(value = "/ipoDetail/remove", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin("*")
-	public boolean removeIPO(@RequestBody JsonNode requestMap) {
+	public String removeIPO(@RequestBody JsonNode requestMap) {
 		if (requestMap.get("ipoDetailId") == null)
-			return false;
+			return "ipoDetail Id must not be null";
 		Long ipoDetailId = requestMap.get("ipoDetailId").asLong();
-		return service.removeIPO(ipoDetailId);
+		if (service.removeIPO(ipoDetailId)) {
+			return "IPO Removed SuccessFully";
+		} else
+			return "Failed To Remove! Try Again";
 
 	}
 

@@ -26,8 +26,20 @@ public class StockPriceService {
 		return stockPriceRepository.findByStockCode_Id(stockCodeId);
 	}
 
+	public List<StockPrice> findByStockCode_IdAndDateTime(Long stockCodeId, LocalDateTime d) {
+		return stockPriceRepository.findByStockCode_IdAndDateTime(stockCodeId, d);
+	}
+
+	public Long deleteByStockCode_Id(Long stockCodeId) {
+		return stockPriceRepository.deleteByStockCode_Id(stockCodeId);
+	}
+
 	public List<StockPrice> findByStockCode_IdAndBetweenDateTime(Long stockCodeId, LocalDateTime d1, LocalDateTime d2) {
 		return stockPriceRepository.findByStockCode_IdAndDateTimeBetween(stockCodeId, d1, d2);
+	}
+
+	public Long deleteByStockCode_IdAndBetweenDateTime(Long stockCodeId, LocalDateTime d1, LocalDateTime d2) {
+		return stockPriceRepository.deleteByStockCode_IdAndDateTimeBetween(stockCodeId, d1, d2);
 	}
 
 	public Set<Date> findDatesWhereRecordExist(LocalDate d1, LocalDate d2, Long stockCodeId) {

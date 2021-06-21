@@ -64,7 +64,7 @@ public class IPODetailService {
 	}
 
 	@Transactional
-	public String UpdateIPO(Long companyId, List<Long> stockExchangeIds, IPODetail ipoDetailData, Long ipoDetailId) {
+	public String UpdateIPO(List<Long> stockExchangeIds, IPODetail ipoDetailData, Long ipoDetailId) {
 		IPODetail ipoDetail = this.findById(ipoDetailId);
 		if (ipoDetail != null) {
 			ipoDetail.setTotalNumberOfShares(ipoDetailData.getTotalNumberOfShares());
@@ -78,16 +78,9 @@ public class IPODetailService {
 				}
 			}
 			ipoDetail.setStockExchanges(stockExchanges);
-			Company company = companyService.findById(companyId);
-			if (company == null) {
-				return "Company Does Not Exist";
-			} else if (company.getIpo() != null && company.getIpo().getId() != ipoDetailId) {
-				return "This Company Already has an IPO";
-			} else {
-				ipoDetail.setCompany(company);
-				ipoDetailRepository.save(ipoDetail);
-				return "IPO UPDATED";
-			}
+			ipoDetailRepository.save(ipoDetail);
+			return "IPO UPDATED";
+
 		} else {
 			return "IPO with this ipodetailId does not exist";
 		}

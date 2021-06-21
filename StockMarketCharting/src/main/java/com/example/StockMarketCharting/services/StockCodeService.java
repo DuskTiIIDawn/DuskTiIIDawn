@@ -39,24 +39,17 @@ public class StockCodeService {
 	}
 
 	public List<StockCode> findByCompanyId(long l) {
-		if (stockCodeRepository.findByCompany_Id(l).size() > 0) {
-			return stockCodeRepository.findByCompany_Id(l);
-		} else
-			return null;
+		return stockCodeRepository.findByCompany_Id(l);
 	}
 
 	public List<StockCode> findByStockExchangeId(long l) {
-		if (stockCodeRepository.findByStockExchange_Id(l).size() > 0) {
-			return stockCodeRepository.findByStockExchange_Id(l);
-		} else
-			return null;
+		return stockCodeRepository.findByStockExchange_Id(l);
+
 	}
 
 	public List<StockCode> findByStockExchangeIdAndCompanyId(long stockExchangeId, long companyId) {
-		if (stockCodeRepository.findByStockExchange_IdAndCompany_Id(stockExchangeId, companyId).size() > 0) {
-			return stockCodeRepository.findByStockExchange_IdAndCompany_Id(stockExchangeId, companyId);
-		} else
-			return null;
+		return stockCodeRepository.findByStockExchange_IdAndCompany_Id(stockExchangeId, companyId);
+
 	}
 
 	public boolean removeStockCode(Long stockCodeId) {

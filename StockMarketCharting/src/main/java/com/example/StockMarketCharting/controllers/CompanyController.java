@@ -83,6 +83,26 @@ public class CompanyController {
 
 	}
 
+	@RequestMapping(value = "/company/withoutIpo", method = RequestMethod.GET)
+	@ResponseBody
+	@CrossOrigin("*")
+	public String getAllCompanyWithoutIpo() {
+		List<Company> allList = service.findallCompanies();
+		List<Company> list = new ArrayList<>();
+		for (Company c : allList) {
+			if (c.getIpo() == null) {
+				list.add(c);
+			}
+		}
+		try {
+			return mapper.writeValueAsString(
+					JsonView.with(list).onClass(Company.class, match().exclude("*").include("id", "companyName")));
+		} catch (JsonProcessingException e) {
+			return e.getMessage();
+		}
+
+	}
+
 	@RequestMapping(value = "/company/getDetails", method = RequestMethod.POST)
 	@ResponseBody
 	@CrossOrigin("*")
