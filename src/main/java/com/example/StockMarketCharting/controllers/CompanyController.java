@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -47,7 +46,6 @@ public class CompanyController {
 
 	@RequestMapping(value = "/company", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin(origins = "https://stockmarketchartingfrontend.herokuapp.com/")
 	public String getAllCompanyOrSearchByString(@RequestBody JsonNode jsonNode) {
 
 		List<Company> list = new ArrayList<>();
@@ -71,7 +69,6 @@ public class CompanyController {
 
 	@RequestMapping(value = "/company/getAllName", method = RequestMethod.GET)
 	@ResponseBody
-	@CrossOrigin(origins = "https://stockmarketchartingfrontend.herokuapp.com/")
 	public String getAllCompanyNameList() {
 		List<Company> list = service.findallCompanies();
 		try {
@@ -85,7 +82,6 @@ public class CompanyController {
 
 	@RequestMapping(value = "/company/withoutIpo", method = RequestMethod.GET)
 	@ResponseBody
-	@CrossOrigin(origins = "https://stockmarketchartingfrontend.herokuapp.com/")
 	public String getAllCompanyWithoutIpo() {
 		List<Company> allList = service.findallCompanies();
 		List<Company> list = new ArrayList<>();
@@ -105,7 +101,6 @@ public class CompanyController {
 
 	@RequestMapping(value = "/company/getDetails", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin(origins = "https://stockmarketchartingfrontend.herokuapp.com/")
 	public String getDetails(@RequestBody JsonNode jsonNode) {
 		if (jsonNode.get("companyId") == null) {
 			return "companyId Property Should Not be NULL";
@@ -131,7 +126,6 @@ public class CompanyController {
 
 	@RequestMapping(value = "/company/getBasicInfo", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin(origins = "https://stockmarketchartingfrontend.herokuapp.com/")
 	public String getBasicInfo(@RequestBody JsonNode jsonNode) {
 		if (jsonNode.get("companyId") == null) {
 			return "companyId Property Should Not be NULL";
@@ -151,7 +145,6 @@ public class CompanyController {
 
 	@RequestMapping(value = "/company/add", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin(origins = "https://stockmarketchartingfrontend.herokuapp.com/")
 	public String addCompany(@RequestBody Company company) {
 		try {
 			service.addCompany(company);
@@ -164,7 +157,6 @@ public class CompanyController {
 
 	@RequestMapping(value = "/company/editBasic", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin(origins = "https://stockmarketchartingfrontend.herokuapp.com/")
 	public String editBasicCompany(@RequestBody Company companyBasicData) {
 		boolean isUpdated = service.updateCompanyBasicInfo(companyBasicData);
 		if (isUpdated) {
@@ -176,7 +168,6 @@ public class CompanyController {
 
 	@RequestMapping(value = "/company/addOrRemoveSector", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin(origins = "https://stockmarketchartingfrontend.herokuapp.com/")
 	public String addOrRemoveSector(@RequestBody JsonNode jsonNode) {
 
 		if (jsonNode.get("companyId") == null) {
@@ -215,7 +206,6 @@ public class CompanyController {
 
 	@RequestMapping(value = "/company/remove", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin(origins = "https://stockmarketchartingfrontend.herokuapp.com/")
 	public String add(@RequestBody JsonNode jsonNode) {
 		if (jsonNode.get("companyId") == null) {
 			return "companyId must not be null";
