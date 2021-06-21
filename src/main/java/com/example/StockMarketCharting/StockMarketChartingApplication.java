@@ -3,7 +3,6 @@ package com.example.StockMarketCharting;
 import java.util.Arrays;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
@@ -12,7 +11,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @SpringBootApplication
-@EnableAutoConfiguration
 @EntityScan(basePackages = { "com.example.StockMarketCharting.entities" })
 public class StockMarketChartingApplication {
 
