@@ -36,14 +36,14 @@ public class SectorController {
 
 	@RequestMapping(value = "/sector", method = RequestMethod.GET)
 	@ResponseBody
-	@CrossOrigin("*")
+	@CrossOrigin(origins = "https://stockmarketchartingfrontend.herokuapp.com/")
 	public List<Sector> getAll() {
 		return sectorService.findAll();
 	}
 
 	@RequestMapping(value = "/sector/add", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin("*")
+	@CrossOrigin(origins = "https://stockmarketchartingfrontend.herokuapp.com/")
 	public String addSector(@RequestBody Sector sector) {
 		sectorService.addSector(sector);
 		return "Sector Added";
@@ -51,7 +51,7 @@ public class SectorController {
 
 	@RequestMapping(value = "/sector/editBasic", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin("*")
+	@CrossOrigin(origins = "https://stockmarketchartingfrontend.herokuapp.com/")
 	public String editBasicOfSector(@RequestBody Sector sectorBasicData) {
 		boolean isUpdated = sectorService.updateSectorBasicInfo(sectorBasicData);
 		if (isUpdated)
@@ -62,7 +62,7 @@ public class SectorController {
 
 	@RequestMapping(value = "/sector/getCompanies", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin("*")
+	@CrossOrigin(origins = "https://stockmarketchartingfrontend.herokuapp.com/")
 	public String getAllCompaniesAndFindByString(@RequestBody JsonNode jsonNode) {
 		if (jsonNode.get("sectorId") == null) {
 			return "sectorId must not be null";
@@ -90,7 +90,7 @@ public class SectorController {
 
 	@RequestMapping(value = "/sector/remove", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin("*")
+	@CrossOrigin(origins = "https://stockmarketchartingfrontend.herokuapp.com/")
 	public String deleteSector(@RequestBody JsonNode jsonNode) {
 		if (jsonNode.get("sectorId") == null) {
 			return "sectorId must not be null";

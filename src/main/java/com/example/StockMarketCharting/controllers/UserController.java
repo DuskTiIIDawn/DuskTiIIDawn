@@ -20,7 +20,7 @@ public class UserController {
 
 	@RequestMapping(value = "/user/add", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin("*")
+	@CrossOrigin(origins = "https://stockmarketchartingfrontend.herokuapp.com/")
 	public ResponseEntity<User> createUser(@RequestBody User user, BindingResult result) {
 		if (result.hasErrors()) {
 			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);

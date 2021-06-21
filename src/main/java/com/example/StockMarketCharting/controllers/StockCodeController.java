@@ -41,7 +41,7 @@ public class StockCodeController {
 
 	@RequestMapping(value = "/stockCode/getAll", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin("*")
+	@CrossOrigin(origins = "https://stockmarketchartingfrontend.herokuapp.com/")
 	public String getAllByCompanyIdOrStockExchangeId(@RequestBody JsonNode jsonNode) {
 		List<StockCode> stockCodes = new ArrayList<>();
 
@@ -74,7 +74,7 @@ public class StockCodeController {
 
 	@RequestMapping(value = "/stockCode/getInfo", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin("*")
+	@CrossOrigin(origins = "https://stockmarketchartingfrontend.herokuapp.com/")
 	public String getInfo(@RequestBody JsonNode jsonNode) {
 		if (jsonNode.get("stockCodeNo") == null) {
 			return "stockCodeNo must not be null";
@@ -100,7 +100,7 @@ public class StockCodeController {
 
 	@RequestMapping(value = "/stockCode/addUpdate", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin("*")
+	@CrossOrigin(origins = "https://stockmarketchartingfrontend.herokuapp.com/")
 	public String addStockCode(@RequestBody JsonNode jsonNode) {
 
 		if (jsonNode.get("stockCodeNo") == null) {
@@ -141,7 +141,7 @@ public class StockCodeController {
 
 	@RequestMapping(value = "/stockCode/remove", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin("*")
+	@CrossOrigin(origins = "https://stockmarketchartingfrontend.herokuapp.com/")
 	public String removeStockCode(@RequestBody JsonNode jsonNode) {
 		Long stockCodeId = jsonNode.get("stockCodeId").asLong();
 		if (service.removeStockCode(stockCodeId)) {

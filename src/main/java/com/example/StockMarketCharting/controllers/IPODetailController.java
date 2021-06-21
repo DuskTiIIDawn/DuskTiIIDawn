@@ -36,7 +36,7 @@ public class IPODetailController {
 
 	@RequestMapping(value = "/ipoDetail", method = RequestMethod.GET)
 	@ResponseBody
-	@CrossOrigin("*")
+	@CrossOrigin(origins = "https://stockmarketchartingfrontend.herokuapp.com/")
 	public String getAllIpo() {
 		List<IPODetail> ipoList = service.findallIPO();
 
@@ -52,7 +52,7 @@ public class IPODetailController {
 
 	@RequestMapping(value = "/ipoDetail/info", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin("*")
+	@CrossOrigin(origins = "https://stockmarketchartingfrontend.herokuapp.com/")
 	public String getIpoDetail(@RequestBody JsonNode requestMap) {
 		if (requestMap.get("ipoDetailId") == null) {
 			return "ipoDetailId must not be null";
@@ -76,7 +76,7 @@ public class IPODetailController {
 
 	@RequestMapping(value = "/ipoDetail/addUpdate", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin("*")
+	@CrossOrigin(origins = "https://stockmarketchartingfrontend.herokuapp.com/")
 	public String addOrUpdateIPO(@RequestBody JsonNode requestMap) {
 		if (requestMap.get("pricePerShare") == null || requestMap.get("totalNumberOfShares") == null
 				|| requestMap.get("openDateTime") == null) {
@@ -111,7 +111,7 @@ public class IPODetailController {
 
 	@RequestMapping(value = "/ipoDetail/remove", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin("*")
+	@CrossOrigin(origins = "https://stockmarketchartingfrontend.herokuapp.com/")
 	public String removeIPO(@RequestBody JsonNode requestMap) {
 		if (requestMap.get("ipoDetailId") == null)
 			return "ipoDetail Id must not be null";

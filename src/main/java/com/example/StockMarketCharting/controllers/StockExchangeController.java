@@ -33,7 +33,7 @@ public class StockExchangeController {
 
 	@RequestMapping(value = "/stockExchange", method = RequestMethod.GET)
 	@ResponseBody
-	@CrossOrigin("*")
+	@CrossOrigin(origins = "https://stockmarketchartingfrontend.herokuapp.com/")
 	public String getAllStockExchange() {
 		List<StockExchange> stockExchangeList = service.findallStockExchange();
 		try {
@@ -46,7 +46,7 @@ public class StockExchangeController {
 
 	@RequestMapping(value = "/stockExchange/info", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin("*")
+	@CrossOrigin(origins = "https://stockmarketchartingfrontend.herokuapp.com/")
 	public String manageStockExchangeInfo(@RequestBody JsonNode jsonNode) {
 		if (jsonNode.get("stockExchangeId") == null) {
 			return "stockExchangeId must Not be null";
@@ -71,7 +71,7 @@ public class StockExchangeController {
 
 	@RequestMapping(value = "/stockExchange/getBasicInfo", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin("*")
+	@CrossOrigin(origins = "https://stockmarketchartingfrontend.herokuapp.com/")
 	public String manageStockExchangeGetBasicInfo(@RequestBody JsonNode jsonNode) {
 		if (jsonNode.get("stockExchangeId") == null) {
 			return "stockExchangeId must Not be null";
@@ -90,7 +90,7 @@ public class StockExchangeController {
 
 	@RequestMapping(value = "/stockExchange/add", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin("*")
+	@CrossOrigin(origins = "https://stockmarketchartingfrontend.herokuapp.com/")
 	public String addStockExchange(@RequestBody StockExchange stockExchange) {
 		service.addStockExchange(stockExchange);
 		return "Stock Exchange Added";
@@ -98,7 +98,7 @@ public class StockExchangeController {
 
 	@RequestMapping(value = "/stockExchange/editBasic", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin("*")
+	@CrossOrigin(origins = "https://stockmarketchartingfrontend.herokuapp.com/")
 	public String editBasicCompany(@RequestBody StockExchange stockExchangeData) {
 		boolean isUpdated = service.updateStockExchangeBasicInfo(stockExchangeData);
 		if (isUpdated) {
