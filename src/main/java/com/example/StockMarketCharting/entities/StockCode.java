@@ -25,20 +25,20 @@ public class StockCode {
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "company_id")
+	@JoinColumn()
 	@JsonIgnore
 	private Company company;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnore
-	@JoinColumn(name = "stock_exchange_id")
+	@JoinColumn()
 	private StockExchange stockExchange;
 
 	@OneToMany(mappedBy = "stockCode", cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private List<StockPrice> stockPrices;
 
-	@Column(name = "stock_code", nullable = false)
+	@Column(nullable = false)
 	private Long stockCode;
 
 	protected StockCode() {
