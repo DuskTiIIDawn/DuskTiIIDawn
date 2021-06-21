@@ -26,17 +26,23 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
+<!--  
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		-->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
+          <groupId>org.springframework.boot</groupId>
+                  <artifactId>spring-boot-starter</artifactId>
+                   <exclusions>
+                      <exclusion>
+                       <groupId>org.springframework.boot</groupId>
+                         <artifactId>spring-boot-starter-logging</artifactId>
+                        </exclusion>
+                     </exclusions>
+                 </dependency>
 		
 	<!--	<dependency>
             <groupId>mysql</groupId>
@@ -49,8 +55,7 @@
         <dependency>
        <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-       <version>9.4-1200-jdbc41</version>
-         </dependency>
+       </dependency>
         <!-- https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core -->
         <dependency>
              <groupId>org.hibernate.orm</groupId>
@@ -59,11 +64,11 @@
         </dependency>
         
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-devtools -->
-        <dependency>
+      <!--  <dependency>
              <groupId>org.springframework.boot</groupId>
              <artifactId>spring-boot-devtools</artifactId>
         </dependency>
-        
+        -->  
         <dependency>
        <groupId>com.monitorjbl</groupId>
        <artifactId>spring-json-view</artifactId>
