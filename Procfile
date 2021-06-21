@@ -1,1 +1,1 @@
-web: java -war target/StockMarketCharting-0.0.1-SNAPSHOT.war
+web: java -jar target/StockMarketCharting-0.0.1-SNAPSHOT.war
