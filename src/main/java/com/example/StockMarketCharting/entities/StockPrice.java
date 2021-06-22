@@ -25,8 +25,8 @@ public class StockPrice {
 	@JsonIgnore
 	private StockCode stockCode;
 
-	@Column(nullable = false, precision = 10, scale = 2)
-	private double currentPrice;
+	@Column(nullable = false)
+	private Double currentPrice;
 
 	@Column(nullable = false)
 	private LocalDateTime dateTime;

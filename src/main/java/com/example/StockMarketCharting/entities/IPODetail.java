@@ -27,8 +27,8 @@ public class IPODetail {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(nullable = false, precision = 10, scale = 2)
-	private double pricePerShare;
+	@Column(nullable = false)
+	private Double pricePerShare;
 
 	@Column(nullable = false)
 	private Long totalNumberOfShares;

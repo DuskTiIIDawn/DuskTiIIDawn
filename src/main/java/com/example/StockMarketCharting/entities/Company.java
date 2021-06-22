@@ -31,7 +31,7 @@ public class Company {
 	private String companyName;
 
 	@Column(nullable = false)
-	private double turnover;
+	private Double turnover;
 
 	@Column(nullable = false)
 	private String ceo;
