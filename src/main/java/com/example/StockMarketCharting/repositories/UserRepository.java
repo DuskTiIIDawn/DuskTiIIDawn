@@ -2,16 +2,21 @@ package com.example.StockMarketCharting.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.StockMarketCharting.entities.User;
+import com.example.StockMarketCharting.entities.UserEntity;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
-	User findByEmail(String email);
+	UserEntity findByEmail(String email);
 
-	User findByUserName(String username);
+	UserEntity findByUserName(String username);
 
-	User findByUserNameAndPassword(String username, String password);
+	UserEntity findByMobileNumber(String mobileNumber);
 
-	User findByMobileNumber(Long mobileNumber);
+	Boolean existsByEmail(String email);
 
+	Boolean existsByUserName(String userName);
+
+	Boolean existsByMobileNumber(String mobileNo);
+
+	Boolean existsByUserNameAndPassword(String username, String password);
 }

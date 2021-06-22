@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler" }, ignoreUnknown = true)
-public class User {
+public class UserEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -34,10 +34,10 @@ public class User {
 	@Column(nullable = false)
 	private boolean isConfirmed;
 
-	protected User() {
+	public UserEntity() {
 	}
 
-	public User(String userName, String password, boolean isAdmin, String email, String mobileNumber,
+	public UserEntity(String userName, String password, boolean isAdmin, String email, String mobileNumber,
 			boolean isConfirmed) {
 		super();
 		this.userName = userName;
