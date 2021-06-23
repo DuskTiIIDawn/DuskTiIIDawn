@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.session.SessionManagementFilter;
 
 import com.example.StockMarketCharting.jwt.JwtAuthenticationEntryPoint;
 import com.example.StockMarketCharting.jwt.JwtRequestFilter;
@@ -51,10 +52,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return super.authenticationManagerBean();
 	}
 
+	@Bean
+	SimpleCORSFilter corsFilter() {
+		SimpleCORSFilter filter = new SimpleCORSFilter();
+		return filter;
+	}
+
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		// We don't need CSRF for this example
-		httpSecurity.csrf().disable()
+		httpSecurity.csrf().disable().addFilterBefore(corsFilter(), SessionManagementFilter.class)
 				// dont authenticate this particular request
 				.authorizeRequests().antMatchers("/authenticate").permitAll().antMatchers("/setuserapi1").permitAll()
 				.antMatchers("/confirmuser/**").permitAll()
