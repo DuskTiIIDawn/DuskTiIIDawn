@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.StockMarketCharting.entities.UserEntity;
 import com.example.StockMarketCharting.services.UserEntityService;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @RestController
 public class UserEntityController {
@@ -111,8 +112,11 @@ public class UserEntityController {
 
 	@RequestMapping(value = "/findByUserNameapi1", method = RequestMethod.POST)
 	@ResponseBody
-	public UserEntity findByuserapi(@RequestBody String userName) {
-		return service.findByUserName(userName);
+	public UserEntity findByuserapi(@RequestBody JsonNode request) {
+		if (request.get("userName") == null) {
+			return null;
+		}
+		return service.findByUserName(request.get("userName").asText());
 	}
 
 	public void sendemail(Long uid, String uName, String email) throws AddressException, MessagingException {
