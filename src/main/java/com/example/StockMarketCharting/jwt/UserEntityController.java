@@ -77,27 +77,31 @@ public class UserEntityController {
 
 	@RequestMapping(value = "/editUserapi1", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, String> reactedituserapi(@RequestBody UserEntity user)
+	public Map<String, String> reactedituserapi(@RequestBody UserEntity user, BindingResult result)
 			throws AddressException, MessagingException {
 
 		Map<String, String> res = new HashMap<>();
+		if (result.hasErrors()) {
+			res.put("ERROR", "Bad Data Provided");
+			return res;
+		}
+		UserEntity userRepo = service.findByUserName(user.getUserName());
 
-		if (service.existsByEmail(user.getEmail())) {
+		if (userRepo.getEmail() != user.getEmail() && service.existsByEmail(user.getEmail())) {
 			res.put("ERROR", "Email already Exist");
 			return res;
 		}
 
-		if (user.getMobileNumber().length() != 10) {
+		if (userRepo.getMobileNumber() != user.getMobileNumber() && user.getMobileNumber().length() != 10) {
 			res.put("ERROR", "Mobile No Must Be Of length 10");
 			return res;
 		}
 
-		if (service.existsByMobileNo(user.getMobileNumber())) {
+		if (userRepo.getMobileNumber() != user.getMobileNumber() != service.existsByMobileNo(user.getMobileNumber())) {
 			res.put("ERROR", "Mobile No already Exist");
 			return res;
 		}
 
-		UserEntity userRepo = service.findByUserId(user.getId());
 		userRepo.setEmail(user.getEmail());
 		userRepo.setUserName(user.getUserName());
 		userRepo.setMobileNumber(user.getMobileNumber());
