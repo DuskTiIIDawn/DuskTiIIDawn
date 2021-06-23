@@ -112,7 +112,7 @@ public class UserEntityController {
 	@RequestMapping(value = "/findByUserNameapi1", method = RequestMethod.POST)
 	@ResponseBody
 	public String findByuserapi(@RequestBody String userName) {
-		return "helllo" + userName;
+		return "helllo " + userName;
 	}
 
 	public void sendemail(Long uid, String uName, String email) throws AddressException, MessagingException {
