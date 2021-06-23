@@ -104,6 +104,7 @@ public class UserEntityController {
 		userRepo.setPassword(user.getPassword());
 		service.saveUser(userRepo);
 		res.put("OK", "User Updated Succesfully ,Check your Mail!");
+
 		return res;
 
 	}
