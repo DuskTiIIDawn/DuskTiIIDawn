@@ -12,7 +12,6 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,7 +27,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.monitorjbl.json.JsonViewModule;
 
 @Controller
-@CrossOrigin("*")
 public class StockPriceController {
 	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yy H:m:s");
 	private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-M-d");
