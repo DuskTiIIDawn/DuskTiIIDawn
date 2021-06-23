@@ -34,7 +34,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 		com.example.StockMarketCharting.entities.UserEntity newUser = new com.example.StockMarketCharting.entities.UserEntity();
 		newUser.setUserName(user.getUserName());
 		newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
-		return service.createNewUser(newUser);
+		return service.saveUser(newUser);
 	}
 
 }

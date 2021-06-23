@@ -66,11 +66,53 @@ public class UserController {
 		UserEntity usr = new UserEntity(user.getUserName(), user.getPassword(), user.isAdmin(), user.getEmail(),
 				user.getMobileNumber(), user.isConfirmed());
 
-		service.createNewUser(usr);
+		service.saveUser(usr);
 		sendemail(usr.getId(), usr.getUserName(), usr.getEmail());
 		res.put("OK", "User Created Succesfully ,Check your Mail!");
 		return res;
 
+	}
+
+	@RequestMapping(value = "/editUserapi1", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, String> reactedituserapi(@RequestBody UserEntity user)
+			throws AddressException, MessagingException {
+
+		Map<String, String> res = new HashMap<>();
+
+		if (user.getMobileNumber().length() != 10) {
+			res.put("ERROR", "Mobile No Must Be Of length 10");
+			return res;
+		}
+
+		if (service.existsByUserName(user.getUserName())) {
+			res.put("ERROR", "User name already Exist");
+			return res;
+		}
+
+		if (service.existsByMobileNo(user.getMobileNumber())) {
+			res.put("ERROR", "Mobile No already Exist");
+			return res;
+		}
+		if (service.existsByEmail(user.getEmail())) {
+			res.put("ERROR", "Email already Exist");
+			return res;
+		}
+		UserEntity userRepo = service.findByUserId(user.getId());
+		userRepo.setEmail(user.getEmail());
+		userRepo.setUserName(user.getUserName());
+		userRepo.setMobileNumber(user.getMobileNumber());
+		userRepo.setPassword(user.getPassword());
+		service.saveUser(userRepo);
+		res.put("OK", "User Updated Succesfully ,Check your Mail!");
+		return res;
+
+	}
+
+	@RequestMapping(value = "/findByUserNameapi1", method = RequestMethod.POST)
+	@ResponseBody
+	public UserEntity findByuserapi(@RequestBody String userName) throws AddressException, MessagingException {
+		return service.findByUserName(userName);
 	}
 
 	public void sendemail(Long uid, String uName, String email) throws AddressException, MessagingException {
@@ -116,7 +158,7 @@ public class UserController {
 			return "User Does Not Exist";
 		}
 		usr.setConfirmed(true);
-		service.createNewUser(usr);
+		service.saveUser(usr);
 		return "User confirmed" + usr.getUserName();
 	}
 
