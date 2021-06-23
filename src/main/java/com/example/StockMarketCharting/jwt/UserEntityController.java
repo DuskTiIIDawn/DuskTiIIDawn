@@ -116,7 +116,7 @@ public class UserEntityController {
 
 		Map<String, String> res = new HashMap<>();
 		if (request.get("userName") == null) {
-			res.put("ERROR", "User Name must not be Null");
+			res.put("ERROR", "User Name must not be Null ");
 			return res;
 		}
 		UserEntity userRepo = service.findByUserName(request.get("userName").asText());
