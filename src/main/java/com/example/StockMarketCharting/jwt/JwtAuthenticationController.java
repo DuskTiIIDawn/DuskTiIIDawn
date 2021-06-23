@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.StockMarketCharting.entities.UserEntity;
-import com.example.StockMarketCharting.services.UserService;
+import com.example.StockMarketCharting.services.UserEntityService;
 import com.fasterxml.jackson.databind.JsonNode;
 
 @RestController
@@ -28,7 +28,7 @@ public class JwtAuthenticationController {
 	private JwtUserDetailsService userDetailsService;
 
 	@Autowired
-	private UserService service;
+	private UserEntityService service;
 
 	@RequestMapping(value = "/authenticate", method = RequestMethod.POST, headers = "Accept=application/json")
 	public Map<String, String> createAuthenticationToken(@RequestBody JsonNode request) throws Exception {

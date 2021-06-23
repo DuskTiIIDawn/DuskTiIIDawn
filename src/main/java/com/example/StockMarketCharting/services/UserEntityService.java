@@ -10,7 +10,7 @@ import com.example.StockMarketCharting.entities.UserEntity;
 import com.example.StockMarketCharting.repositories.UserEntityRepository;
 
 @Service
-public class UserService {
+public class UserEntityService {
 	@Autowired
 	UserEntityRepository userEntityRepository;
 

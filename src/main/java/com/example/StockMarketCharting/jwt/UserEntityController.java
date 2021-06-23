@@ -23,16 +23,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.StockMarketCharting.entities.UserEntity;
-import com.example.StockMarketCharting.services.UserService;
+import com.example.StockMarketCharting.services.UserEntityService;
 
 @RestController
-public class UserController {
+public class UserEntityController {
 
 	@Autowired
 	private PasswordEncoder bcryptEncoder;
 
 	@Autowired
-	UserService service;
+	UserEntityService service;
 
 	@RequestMapping(value = "/setuserapi1", method = RequestMethod.POST)
 	@ResponseBody

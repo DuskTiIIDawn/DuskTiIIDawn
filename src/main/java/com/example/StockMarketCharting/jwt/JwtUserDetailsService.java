@@ -9,12 +9,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.StockMarketCharting.services.UserService;
+import com.example.StockMarketCharting.services.UserEntityService;
 
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
 	@Autowired
-	UserService service;
+	UserEntityService service;
 
 	@Autowired
 	private PasswordEncoder bcryptEncoder;
