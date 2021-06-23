@@ -122,7 +122,7 @@ public class UserEntityController {
 			res.put("ERROR", "User Name must not be Null");
 			return res;
 		}
-		UserEntity userRepo = service.findByUserName(request.get("userName").asText();
+		UserEntity userRepo = service.findByUserName(request.get("userName").asText());
 		if (request.get("oldpassword") == null) {
 			res.put("ERROR", "Please Provide Old Password");
 			return res;
@@ -137,8 +137,6 @@ public class UserEntityController {
 		}
 		userRepo.setPassword(bcryptEncoder.encode(request.get("newPassword").asText()));
 		service.saveUser(userRepo);
-		res.put("OK", "PassWord changed Succesfully!");
-
 		return res;
 
 	}
