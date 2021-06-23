@@ -103,7 +103,6 @@ public class UserEntityController {
 		}
 
 		userRepo.setEmail(user.getEmail());
-		userRepo.setUserName(user.getUserName());
 		userRepo.setMobileNumber(user.getMobileNumber());
 		service.saveUser(userRepo);
 		res.put("OK", "User Updated Succesfully ,Check your Mail!");
