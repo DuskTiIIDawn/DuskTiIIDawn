@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,6 +31,9 @@ public class JwtAuthenticationController {
 	@Autowired
 	private UserEntityService service;
 
+	@Autowired
+	private PasswordEncoder bcryptEncoder;
+
 	@RequestMapping(value = "/authenticate", method = RequestMethod.POST, headers = "Accept=application/json")
 	public Map<String, String> createAuthenticationToken(@RequestBody JsonNode request) throws Exception {
 		Map<String, String> res = new HashMap<>();
@@ -37,10 +41,11 @@ public class JwtAuthenticationController {
 			res.put("ERROR", "BAD DATA!");
 		}
 		String userName = request.get("userName").asText();
-		String password = request.get("password").asText();
+		String rawPassword = request.get("password").asText();
+		UserEntity userEntity = service.findByUserName(userName);
 
-		if (service.existsByUserNameAndPassword(userName, password) == false) {
-			res.put("ERROR", "Invalid Credentials");
+		if (userEntity == null || bcryptEncoder.matches(rawPassword, userEntity.getPassword())) {
+			res.put("ERROR", "Username Password Does Not Match ");
 			return res;
 		}
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(userName);

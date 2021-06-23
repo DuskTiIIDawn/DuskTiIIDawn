@@ -37,7 +37,7 @@ public class UserEntityController {
 
 	@RequestMapping(value = "/setuserapi1", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, String> reactuserapi(@RequestBody UserEntity user, BindingResult result)
+	public Map<String, String> userapi(@RequestBody UserEntity user, BindingResult result)
 			throws AddressException, MessagingException {
 
 		Map<String, String> res = new HashMap<>();
@@ -65,8 +65,8 @@ public class UserEntityController {
 			return res;
 		}
 
-		UserEntity usr = new UserEntity(user.getUserName(), user.getPassword(), user.isAdmin(), user.getEmail(),
-				user.getMobileNumber(), user.isConfirmed());
+		UserEntity usr = new UserEntity(user.getUserName(), bcryptEncoder.encode(user.getPassword()), user.isAdmin(),
+				user.getEmail(), user.getMobileNumber(), user.isConfirmed());
 
 		service.saveUser(usr);
 		sendemail(usr.getId(), usr.getUserName(), usr.getEmail());
@@ -77,7 +77,7 @@ public class UserEntityController {
 
 	@RequestMapping(value = "/editUserapi1", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, String> reactedituserapi(@RequestBody UserEntity user, BindingResult result)
+	public Map<String, String> edituserapi(@RequestBody UserEntity user, BindingResult result)
 			throws AddressException, MessagingException {
 
 		Map<String, String> res = new HashMap<>();
@@ -105,7 +105,6 @@ public class UserEntityController {
 		userRepo.setEmail(user.getEmail());
 		userRepo.setUserName(user.getUserName());
 		userRepo.setMobileNumber(user.getMobileNumber());
-		userRepo.setPassword(user.getPassword());
 		service.saveUser(userRepo);
 		res.put("OK", "User Updated Succesfully ,Check your Mail!");
 
@@ -113,9 +112,40 @@ public class UserEntityController {
 
 	}
 
+	@RequestMapping(value = "/changePasswordapi1", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, String> changepasswordrapi(@RequestBody JsonNode request)
+			throws AddressException, MessagingException {
+
+		Map<String, String> res = new HashMap<>();
+		if (request.get("userName") == null) {
+			res.put("ERROR", "User Name must not be Null");
+			return res;
+		}
+		UserEntity userRepo = service.findByUserName(request.get("userName").asText();
+		if (request.get("oldpassword") == null) {
+			res.put("ERROR", "Please Provide Old Password");
+			return res;
+		}
+		if (userRepo == null || bcryptEncoder.matches(request.get("oldpassword").asText(), userRepo.getPassword())) {
+			res.put("ERROR", "Incorrect password");
+			return res;
+		}
+		if (request.get("newPassword") == null) {
+			res.put("ERROR", "Please Provide New Password");
+			return res;
+		}
+		userRepo.setPassword(bcryptEncoder.encode(request.get("newPassword").asText()));
+		service.saveUser(userRepo);
+		res.put("OK", "PassWord changed Succesfully!");
+
+		return res;
+
+	}
+
 	@RequestMapping(value = "/findByUserNameapi1", method = RequestMethod.POST)
 	@ResponseBody
-	public UserEntity findByuserapi(@RequestBody JsonNode request) {
+	public UserEntity findbyusernameapi(@RequestBody JsonNode request) {
 		if (request.get("userName") == null) {
 			return null;
 		}
