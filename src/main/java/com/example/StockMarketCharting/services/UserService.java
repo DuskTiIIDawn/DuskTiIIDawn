@@ -1,5 +1,6 @@
 package com.example.StockMarketCharting.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +27,12 @@ public class UserService {
 	}
 
 	public UserEntity findByUserName(String username) {
-		return userRepository.findByUserName(username);
-	}
+		List<UserEntity> users = userRepository.findByUserName(username);
+		if (users.size() > 0) {
+			return users.get(0);
+		} else
+			return null;
 
-	public UserEntity findByMobileNo(String mobileNo) {
-		return userRepository.findByMobileNumber(mobileNo);
 	}
 
 	public Boolean existsByUserNameAndPassword(String username, String password) {

@@ -111,7 +111,7 @@ public class UserController {
 
 	@RequestMapping(value = "/findByUserNameapi1", method = RequestMethod.POST)
 	@ResponseBody
-	public UserEntity findByuserapi(@RequestBody String userName) throws AddressException, MessagingException {
+	public UserEntity findByuserapi(@RequestBody String userName) {
 		return service.findByUserName(userName);
 	}
 
