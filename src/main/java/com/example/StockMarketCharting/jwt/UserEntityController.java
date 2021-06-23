@@ -46,13 +46,17 @@ public class UserEntityController {
 			res.put("ERROR", "Bad Data Provided");
 			return res;
 		}
-		if (user.getMobileNumber().length() != 10) {
-			res.put("ERROR", "Mobile No Must Be Of length 10");
+		if (service.existsByUserName(user.getUserName())) {
+			res.put("ERROR", "User name already Exist");
+			return res;
+		}
+		if (service.existsByEmail(user.getEmail())) {
+			res.put("ERROR", "Email already Exist");
 			return res;
 		}
 
-		if (service.existsByUserName(user.getUserName())) {
-			res.put("ERROR", "User name already Exist");
+		if (user.getMobileNumber().length() != 10) {
+			res.put("ERROR", "Mobile No Must Be Of length 10");
 			return res;
 		}
 
@@ -60,10 +64,7 @@ public class UserEntityController {
 			res.put("ERROR", "Mobile No already Exist");
 			return res;
 		}
-		if (service.existsByEmail(user.getEmail())) {
-			res.put("ERROR", "Email already Exist");
-			return res;
-		}
+
 		UserEntity usr = new UserEntity(user.getUserName(), user.getPassword(), user.isAdmin(), user.getEmail(),
 				user.getMobileNumber(), user.isConfirmed());
 
@@ -81,13 +82,13 @@ public class UserEntityController {
 
 		Map<String, String> res = new HashMap<>();
 
-		if (user.getMobileNumber().length() != 10) {
-			res.put("ERROR", "Mobile No Must Be Of length 10");
+		if (service.existsByEmail(user.getEmail())) {
+			res.put("ERROR", "Email already Exist");
 			return res;
 		}
 
-		if (service.existsByUserName(user.getUserName())) {
-			res.put("ERROR", "User name already Exist");
+		if (user.getMobileNumber().length() != 10) {
+			res.put("ERROR", "Mobile No Must Be Of length 10");
 			return res;
 		}
 
@@ -95,10 +96,7 @@ public class UserEntityController {
 			res.put("ERROR", "Mobile No already Exist");
 			return res;
 		}
-		if (service.existsByEmail(user.getEmail())) {
-			res.put("ERROR", "Email already Exist");
-			return res;
-		}
+
 		UserEntity userRepo = service.findByUserId(user.getId());
 		userRepo.setEmail(user.getEmail());
 		userRepo.setUserName(user.getUserName());
