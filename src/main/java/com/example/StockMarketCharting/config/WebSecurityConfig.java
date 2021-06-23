@@ -64,7 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		httpSecurity.csrf().disable().addFilterBefore(corsFilter(), SessionManagementFilter.class)
 				// dont authenticate this particular request
 				.authorizeRequests().antMatchers("/authenticate").permitAll().antMatchers("/setuserapi1").permitAll()
-				.antMatchers("/confirmuser/**").permitAll()
+				.antMatchers("/confirmuser/**").permitAll().antMatchers("/**").permitAll()
 
 				// all other requests need to be authenticated
 				.anyRequest().authenticated().and().
