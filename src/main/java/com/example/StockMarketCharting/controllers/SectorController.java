@@ -25,7 +25,7 @@ import com.monitorjbl.json.JsonView;
 import com.monitorjbl.json.JsonViewModule;
 
 @Controller
-@CrossOrigin()
+@CrossOrigin("*")
 public class SectorController {
 	private ObjectMapper mapper = new ObjectMapper().registerModules(new JsonViewModule(), new JavaTimeModule());
 
