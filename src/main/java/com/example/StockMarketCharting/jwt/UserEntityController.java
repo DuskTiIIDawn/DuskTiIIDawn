@@ -13,6 +13,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +35,39 @@ public class UserEntityController {
 
 	@Autowired
 	UserEntityService service;
+	@Autowired
+	private JwtTokenUtil jwtTokenUtil;
+
+	@Autowired
+	private JwtUserDetailsService userDetailsService;
+
+	@RequestMapping(value = "/authenticate", method = RequestMethod.POST, headers = "Accept=application/json")
+	public Map<String, String> createAuthenticationToken(@RequestBody JsonNode request) throws Exception {
+		Map<String, String> res = new HashMap<>();
+		if (request.get("userName") == null || request.get("password") == null) {
+			res.put("ERROR", "BAD DATA!");
+		}
+		String userName = request.get("userName").asText();
+		String rawPassword = request.get("password").asText();
+		UserEntity userEntity = service.findByUserName(userName);
+
+		if (userEntity == null || bcryptEncoder.matches(rawPassword, userEntity.getPassword())) {
+			res.put("ERROR", "Username Password Does Not Match ");
+			return res;
+		}
+		if (userEntity.isConfirmed() == false) {
+			res.put("ERROR", "Please verify your email first!");
+			return res;
+		}
+		final UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
+		final String token = jwtTokenUtil.generateToken(userDetails);
+		UserEntity usr = service.findByUserName(userName);
+		if (usr.isAdmin()) {
+			res.put("IS_ADMIN", "YES");
+		}
+		res.put("TOKEN", token);
+		return res;
+	}
 
 	@RequestMapping(value = "/setuserapi1", method = RequestMethod.POST)
 	@ResponseBody
@@ -70,43 +104,7 @@ public class UserEntityController {
 
 		service.saveUser(usr);
 		sendemail(usr.getId(), usr.getUserName(), usr.getEmail());
-		res.put("OK", "User Created Succesfully ,Check your Mail!");
-		return res;
-
-	}
-
-	@RequestMapping(value = "/editUserapi1", method = RequestMethod.POST)
-	@ResponseBody
-	public Map<String, String> edituserapi(@RequestBody UserEntity user, BindingResult result)
-			throws AddressException, MessagingException {
-
-		Map<String, String> res = new HashMap<>();
-		if (result.hasErrors()) {
-			res.put("ERROR", "Bad Data Provided");
-			return res;
-		}
-		UserEntity userRepo = service.findByUserName(user.getUserName());
-
-		if (userRepo.getEmail() != user.getEmail() && service.existsByEmail(user.getEmail())) {
-			res.put("ERROR", "Email already Exist");
-			return res;
-		}
-
-		if (userRepo.getMobileNumber() != user.getMobileNumber() && user.getMobileNumber().length() != 10) {
-			res.put("ERROR", "Mobile No Must Be Of length 10");
-			return res;
-		}
-
-		if (userRepo.getMobileNumber() != user.getMobileNumber() != service.existsByMobileNo(user.getMobileNumber())) {
-			res.put("ERROR", "Mobile No already Exist");
-			return res;
-		}
-
-		userRepo.setEmail(user.getEmail());
-		userRepo.setMobileNumber(user.getMobileNumber());
-		service.saveUser(userRepo);
-		res.put("OK", "User Updated Succesfully ,Check your Mail!");
-
+		res.put("OK", "User Created Succesfully ,Check your Mail To verify and Login!");
 		return res;
 
 	}
@@ -193,7 +191,7 @@ public class UserEntityController {
 		}
 		usr.setConfirmed(true);
 		service.saveUser(usr);
-		return "User confirmed" + usr.getUserName();
+		return "User confirmed --->" + usr.getUserName();
 	}
 
 }
