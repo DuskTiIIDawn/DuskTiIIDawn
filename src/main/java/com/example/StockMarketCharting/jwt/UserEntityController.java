@@ -112,7 +112,7 @@ public class UserEntityController {
 	@RequestMapping(value = "/findByUserNameapi1", method = RequestMethod.POST)
 	@ResponseBody
 	public String findByuserapi(@RequestBody String userName) {
-		return "helllo ";
+		return "helllo" + userName;
 	}
 
 	public void sendemail(Long uid, String uName, String email) throws AddressException, MessagingException {
@@ -149,6 +149,7 @@ public class UserEntityController {
 	}
 
 	@RequestMapping(value = "/confirmuser/{uid}/{encodedUsrName}", method = RequestMethod.GET)
+	@ResponseBody
 	public String welcomepage(@PathVariable Long uid, @PathVariable String encodedUsrName) {
 		UserEntity usr = service.findByUserId(uid);
 
