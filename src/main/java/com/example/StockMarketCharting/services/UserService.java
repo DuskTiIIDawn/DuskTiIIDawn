@@ -7,19 +7,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.StockMarketCharting.entities.UserEntity;
-import com.example.StockMarketCharting.repositories.UserRepository;
+import com.example.StockMarketCharting.repositories.UserEntityRepository;
 
 @Service
 public class UserService {
 	@Autowired
-	UserRepository userRepository;
+	UserEntityRepository userEntityRepository;
 
 	public UserEntity saveUser(UserEntity user) {
-		return userRepository.save(user);
+		return userEntityRepository.save(user);
 	}
 
 	public UserEntity findByUserId(Long id) {
-		Optional<UserEntity> user = userRepository.findById(id);
+		Optional<UserEntity> user = userEntityRepository.findById(id);
 		if (user.isPresent())
 			return user.get();
 		else
@@ -27,7 +27,7 @@ public class UserService {
 	}
 
 	public UserEntity findByUserName(String username) {
-		List<UserEntity> users = userRepository.findByUserName(username);
+		List<UserEntity> users = userEntityRepository.findByUserName(username);
 		if (users.size() > 0) {
 			return users.get(0);
 		} else
@@ -36,34 +36,34 @@ public class UserService {
 	}
 
 	public Boolean existsByUserNameAndPassword(String username, String password) {
-		return userRepository.existsByUserNameAndPassword(username, password);
+		return userEntityRepository.existsByUserNameAndPassword(username, password);
 	}
 
 	public Boolean existsByUserName(String username) {
-		return userRepository.existsByUserName(username);
+		return userEntityRepository.existsByUserName(username);
 	}
 
 	public Boolean existsByMobileNo(String mobileNo) {
-		return userRepository.existsByMobileNumber(mobileNo);
+		return userEntityRepository.existsByMobileNumber(mobileNo);
 	}
 
 	public Boolean existsByEmail(String email) {
-		return userRepository.existsByEmail(email);
+		return userEntityRepository.existsByEmail(email);
 	}
 
 	public boolean isAdmin(Long userId) {
-		Optional<UserEntity> user = userRepository.findById(userId);
+		Optional<UserEntity> user = userEntityRepository.findById(userId);
 		if (user.isPresent()) {
-			return userRepository.findById(userId).get().isAdmin();
+			return userEntityRepository.findById(userId).get().isAdmin();
 		} else {
 			return false;
 		}
 	}
 
 	public boolean isConfirmed(Long userId) {
-		Optional<UserEntity> user = userRepository.findById(userId);
+		Optional<UserEntity> user = userEntityRepository.findById(userId);
 		if (user.isPresent()) {
-			return userRepository.findById(userId).get().isConfirmed();
+			return userEntityRepository.findById(userId).get().isConfirmed();
 		} else {
 			return false;
 		}
