@@ -191,7 +191,7 @@ public class UserEntityController {
 		}
 		usr.setConfirmed(true);
 		service.saveUser(usr);
-		return "User confirmed --->" + usr.getUserName();
+		return "User confirmed ! Thanks You can Login Now--->" + usr.getUserName();
 	}
 
 }
