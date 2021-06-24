@@ -120,7 +120,7 @@ public class UserEntityController {
 			return res;
 		}
 		UserEntity userRepo = service.findByUserName(request.get("userName").asText());
-		if (request.get("oldpassword") == null) {
+		if (request.get("oldPassword") == null) {
 			res.put("ERROR", "Please Provide Old Password");
 			return res;
 		}
