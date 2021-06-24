@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,6 +42,7 @@ public class SectorController {
 
 	@RequestMapping(value = "/sector/add", method = RequestMethod.POST)
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public String addSector(@RequestBody Sector sector) {
 		sectorService.addSector(sector);
 		return "Sector Added";
@@ -48,6 +50,7 @@ public class SectorController {
 
 	@RequestMapping(value = "/sector/editBasic", method = RequestMethod.POST)
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public String editBasicOfSector(@RequestBody Sector sectorBasicData) {
 		boolean isUpdated = sectorService.updateSectorBasicInfo(sectorBasicData);
 		if (isUpdated)
@@ -85,6 +88,7 @@ public class SectorController {
 
 	@RequestMapping(value = "/sector/remove", method = RequestMethod.POST)
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public String deleteSector(@RequestBody JsonNode jsonNode) {
 		if (jsonNode.get("sectorId") == null) {
 			return "sectorId must not be null";

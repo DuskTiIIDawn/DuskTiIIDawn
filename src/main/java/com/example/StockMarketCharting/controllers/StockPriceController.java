@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +43,7 @@ public class StockPriceController {
 	// AKA....import of Data
 	@RequestMapping(value = "/stockPrice/upload", method = RequestMethod.POST)
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public Map<String, Object> addStockExchange(@RequestBody Map<String, JsonNode> requestMap) {
 		Map<String, Object> response = new HashMap<>();
 		int cnt = 0;
@@ -115,6 +117,7 @@ public class StockPriceController {
 
 	@RequestMapping(value = "/stockPrice/removeByStockCode", method = RequestMethod.POST)
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public Long removeByStockCode(@RequestBody JsonNode jsonNode) {
 		if (jsonNode.get("stockCodeNo") == null) {
 			return 0L;
@@ -137,6 +140,7 @@ public class StockPriceController {
 
 	@RequestMapping(value = "/stockPrice/missingRecords", method = RequestMethod.POST)
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public Map<String, Object> getMissingRecordsByStockCode(@RequestBody JsonNode jsonNode) {
 		Map<String, Object> response = new HashMap<>();
 		List<LocalDate> listOfDatesMissing = new ArrayList<>();

@@ -5,6 +5,7 @@ import static com.monitorjbl.json.Match.match;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -86,6 +87,7 @@ public class StockExchangeController {
 
 	@RequestMapping(value = "/stockExchange/add", method = RequestMethod.POST)
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public String addStockExchange(@RequestBody StockExchange stockExchange) {
 		service.addStockExchange(stockExchange);
 		return "Stock Exchange Added";
@@ -93,6 +95,7 @@ public class StockExchangeController {
 
 	@RequestMapping(value = "/stockExchange/editBasic", method = RequestMethod.POST)
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public String editBasicCompany(@RequestBody StockExchange stockExchangeData) {
 		boolean isUpdated = service.updateStockExchangeBasicInfo(stockExchangeData);
 		if (isUpdated) {

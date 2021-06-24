@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -145,6 +146,7 @@ public class CompanyController {
 
 	@RequestMapping(value = "/company/add", method = RequestMethod.POST)
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public String addCompany(@RequestBody Company company) {
 		try {
 			service.addCompany(company);
@@ -157,6 +159,7 @@ public class CompanyController {
 
 	@RequestMapping(value = "/company/editBasic", method = RequestMethod.POST)
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public String editBasicCompany(@RequestBody Company companyBasicData) {
 		boolean isUpdated = service.updateCompanyBasicInfo(companyBasicData);
 		if (isUpdated) {
@@ -168,6 +171,7 @@ public class CompanyController {
 
 	@RequestMapping(value = "/company/addOrRemoveSector", method = RequestMethod.POST)
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public String addOrRemoveSector(@RequestBody JsonNode jsonNode) {
 
 		if (jsonNode.get("companyId") == null) {
@@ -206,6 +210,7 @@ public class CompanyController {
 
 	@RequestMapping(value = "/company/remove", method = RequestMethod.POST)
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public String add(@RequestBody JsonNode jsonNode) {
 		if (jsonNode.get("companyId") == null) {
 			return "companyId must not be null";

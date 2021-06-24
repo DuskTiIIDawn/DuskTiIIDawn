@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -97,6 +98,7 @@ public class StockCodeController {
 
 	@RequestMapping(value = "/stockCode/addUpdate", method = RequestMethod.POST)
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public String addStockCode(@RequestBody JsonNode jsonNode) {
 
 		if (jsonNode.get("stockCodeNo") == null) {
@@ -137,6 +139,7 @@ public class StockCodeController {
 
 	@RequestMapping(value = "/stockCode/remove", method = RequestMethod.POST)
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public String removeStockCode(@RequestBody JsonNode jsonNode) {
 		Long stockCodeId = jsonNode.get("stockCodeId").asLong();
 		if (service.removeStockCode(stockCodeId)) {
