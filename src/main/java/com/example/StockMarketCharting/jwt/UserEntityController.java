@@ -118,7 +118,7 @@ public class UserEntityController {
 			res.put("ERROR", "Please Provide Old Password");
 			return res;
 		}
-		if (userRepo == null || bcryptEncoder.matches(request.get("oldpassword").asText(), userRepo.getPassword())) {
+		if (userRepo == null || bcryptEncoder.matches(request.get("oldPassword").asText(), userRepo.getPassword())) {
 			res.put("ERROR", "Incorrect password");
 			return res;
 		}

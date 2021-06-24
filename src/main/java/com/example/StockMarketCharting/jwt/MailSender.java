@@ -19,7 +19,6 @@ public class MailSender {
 		mail.setTo(to);
 		mail.setSubject(subject);
 		mail.setText(body);
-
 		javaMailSender.send(mail);
 
 	}
