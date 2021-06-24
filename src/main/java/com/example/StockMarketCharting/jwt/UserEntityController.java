@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -145,18 +146,18 @@ public class UserEntityController {
 
 	public void sendEmail(Long uid, String uName, String email) {
 		String subject = "Account Confirmation Mail from Stock Chart Marketing";
-		String message = "Click The link to confirm --> https://glacial-ridge-65812.herokuapp.com/confirmuser/" + uid
-				+ "/" + bcryptEncoder.encode(uName);
+		String message = "Click The link to confirm --> https://glacial-ridge-65812.herokuapp.com/confirmuser" + uid
+				+ "?token=" + bcryptEncoder.encode(uName);
 		mailSender.sendMail("classesfuturetrack@gmail.com", email, subject, message);
 	}
 
-	@RequestMapping(value = "/confirmuser/{uid}/{encodedUsrName}", method = RequestMethod.GET)
-	public String welcomepage(@PathVariable Long uid, @PathVariable String encodedUsrName) {
+	@RequestMapping(value = "/confirmuser/{uid}", method = { RequestMethod.GET, RequestMethod.POST })
+	public String welcomepage(@PathVariable Long uid, @RequestParam String token) {
 		UserEntity usr = service.findByUserId(uid);
 
 		if (usr == null)
 			return "Unknown User";
-		if (bcryptEncoder.matches(usr.getUserName(), encodedUsrName) == false) {
+		if (bcryptEncoder.matches(usr.getUserName(), token) == false) {
 			return "User Does Not Exist";
 		}
 		if (usr.isConfirmed() == true) {
