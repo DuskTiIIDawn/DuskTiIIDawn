@@ -163,7 +163,6 @@ public class UserEntityController {
 				return new javax.mail.PasswordAuthentication(username, password);
 			}
 		});
-
 		try {
 
 			Message message = new MimeMessage(session);
