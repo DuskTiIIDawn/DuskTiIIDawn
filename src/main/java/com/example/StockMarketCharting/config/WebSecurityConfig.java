@@ -63,7 +63,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				registry.addMapping("/**")
 						.allowedOrigins("https://stockmarketchartingfrontend.herokuapp.com",
 								"http://stockmarketchartingfrontend.herokuapp.com", "http://localhost:3000")
-						.allowedMethods("PUT", "DELETE", "POST", "OPTIONS")
+						.allowedMethods("PUT", "DELETE", "POST", "OPTIONS", "GET")
 						.allowedHeaders("Authorization", "Origin", "Content-Type", "Accept").allowCredentials(true);
 
 			}
