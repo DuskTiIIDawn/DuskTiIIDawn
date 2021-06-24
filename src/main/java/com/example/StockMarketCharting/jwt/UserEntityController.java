@@ -48,7 +48,7 @@ public class UserEntityController {
 		String rawPassword = request.get("password").asText();
 		UserEntity userEntity = service.findByUserName(userName);
 
-		if (userEntity == null || bcryptEncoder.matches(rawPassword, userEntity.getPassword())) {
+		if (userEntity == null || bcryptEncoder.matches(rawPassword, userEntity.getPassword()) == false) {
 			res.put("ERROR", "Username Password Does Not Match ");
 			return res;
 		}
@@ -130,7 +130,7 @@ public class UserEntityController {
 		}
 		userRepo.setPassword(bcryptEncoder.encode(request.get("newPassword").asText()));
 		service.saveUser(userRepo);
-		res.put("OK", "PassWord Chaged Successfully!");
+		res.put("OK", "Password Chaged Successfully!");
 		return res;
 
 	}
