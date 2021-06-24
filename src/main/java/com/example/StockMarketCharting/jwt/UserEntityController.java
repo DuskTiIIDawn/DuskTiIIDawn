@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
@@ -33,7 +34,8 @@ public class UserEntityController {
 	private JwtUserDetailsService userDetailsService;
 
 	@Autowired
-	private JavaMailerServiceImpl mailService;
+	@Qualifier("javasampleapproachMailSender")
+	public MailSender mailSender;
 
 	@RequestMapping(value = "/authenticate", method = RequestMethod.POST, headers = "Accept=application/json")
 	public Map<String, String> createAuthenticationToken(@RequestBody JsonNode request) throws Exception {
@@ -143,7 +145,7 @@ public class UserEntityController {
 		String subject = "Account Confirmation Mail from Stock Chart Marketing";
 		String message = "Click The link to confirm --> https://glacial-ridge-65812.herokuapp.com/confirmuser/" + uid
 				+ "/" + bcryptEncoder.encode(uName);
-		mailService.sendMail(email, subject, message);
+		mailSender.sendMail("classesfuturetrack@gmail.com", email, subject, message);
 	}
 
 	@RequestMapping(value = "/confirmuser/{uid}/{encodedUsrName}", method = RequestMethod.GET)
