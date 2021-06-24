@@ -14,6 +14,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.example.StockMarketCharting.jwt.JwtAuthenticationEntryPoint;
 import com.example.StockMarketCharting.jwt.JwtRequestFilter;
@@ -49,6 +51,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
+	}
+
+	@Bean
+	public WebMvcConfigurer corsConfigurer() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/**").allowedOrigins("https://stockmarketchartingfrontend.herokuapp.com")
+						.allowedMethods("PUT", "DELETE", "POST", "OPTIONS").allowedHeaders("Authorization")
+						.allowCredentials(false).maxAge(3600);
+				;
+			}
+		};
 	}
 
 	@Override
