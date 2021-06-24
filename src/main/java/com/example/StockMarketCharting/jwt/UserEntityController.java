@@ -150,7 +150,7 @@ public class UserEntityController {
 	public void sendemail(Long uid, String uName, String email) throws AddressException, MessagingException {
 
 		final String username = "classesfuturetrack@gmail.com";
-		final String password = "prqxktmhfyhvqmeh";
+		final String password = "aigixahfsjhixcpf";
 
 		Properties prop = new Properties();
 		prop.put("mail.smtp.host", "smtp.gmail.com");
