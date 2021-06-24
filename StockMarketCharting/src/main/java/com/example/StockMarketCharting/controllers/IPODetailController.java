@@ -9,7 +9,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,7 +35,6 @@ public class IPODetailController {
 
 	@RequestMapping(value = "/ipoDetail", method = RequestMethod.GET)
 	@ResponseBody
-	@CrossOrigin("*")
 	public String getAllIpo() {
 		List<IPODetail> ipoList = service.findallIPO();
 
@@ -52,7 +50,6 @@ public class IPODetailController {
 
 	@RequestMapping(value = "/ipoDetail/info", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin("*")
 	public String getIpoDetail(@RequestBody JsonNode requestMap) {
 		if (requestMap.get("ipoDetailId") == null) {
 			return "ipoDetailId must not be null";
@@ -76,7 +73,6 @@ public class IPODetailController {
 
 	@RequestMapping(value = "/ipoDetail/addUpdate", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin("*")
 	public String addOrUpdateIPO(@RequestBody JsonNode requestMap) {
 		if (requestMap.get("pricePerShare") == null || requestMap.get("totalNumberOfShares") == null
 				|| requestMap.get("openDateTime") == null) {
@@ -111,7 +107,6 @@ public class IPODetailController {
 
 	@RequestMapping(value = "/ipoDetail/remove", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin("*")
 	public String removeIPO(@RequestBody JsonNode requestMap) {
 		if (requestMap.get("ipoDetailId") == null)
 			return "ipoDetail Id must not be null";

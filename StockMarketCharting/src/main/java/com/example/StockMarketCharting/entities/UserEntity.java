@@ -7,10 +7,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 @JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler" }, ignoreUnknown = true)
-public class User {
+public class UserEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,9 +22,11 @@ public class User {
 	private String userName;
 
 	@Column(nullable = false)
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
 
 	@Column(nullable = false)
+	@JsonProperty(access = Access.READ_ONLY)
 	private boolean isAdmin;
 
 	@Column(nullable = false, unique = true)
@@ -32,12 +36,13 @@ public class User {
 	private String mobileNumber;
 
 	@Column(nullable = false)
+	@JsonProperty(access = Access.READ_ONLY)
 	private boolean isConfirmed;
 
-	protected User() {
+	public UserEntity() {
 	}
 
-	public User(String userName, String password, boolean isAdmin, String email, String mobileNumber,
+	public UserEntity(String userName, String password, boolean isAdmin, String email, String mobileNumber,
 			boolean isConfirmed) {
 		super();
 		this.userName = userName;

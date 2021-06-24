@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,7 +32,6 @@ public class StockExchangeController {
 
 	@RequestMapping(value = "/stockExchange", method = RequestMethod.GET)
 	@ResponseBody
-	@CrossOrigin("*")
 	public String getAllStockExchange() {
 		List<StockExchange> stockExchangeList = service.findallStockExchange();
 		try {
@@ -46,7 +44,6 @@ public class StockExchangeController {
 
 	@RequestMapping(value = "/stockExchange/info", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin("*")
 	public String manageStockExchangeInfo(@RequestBody JsonNode jsonNode) {
 		if (jsonNode.get("stockExchangeId") == null) {
 			return "stockExchangeId must Not be null";
@@ -71,7 +68,6 @@ public class StockExchangeController {
 
 	@RequestMapping(value = "/stockExchange/getBasicInfo", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin("*")
 	public String manageStockExchangeGetBasicInfo(@RequestBody JsonNode jsonNode) {
 		if (jsonNode.get("stockExchangeId") == null) {
 			return "stockExchangeId must Not be null";
@@ -90,7 +86,6 @@ public class StockExchangeController {
 
 	@RequestMapping(value = "/stockExchange/add", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin("*")
 	public String addStockExchange(@RequestBody StockExchange stockExchange) {
 		service.addStockExchange(stockExchange);
 		return "Stock Exchange Added";
@@ -98,7 +93,6 @@ public class StockExchangeController {
 
 	@RequestMapping(value = "/stockExchange/editBasic", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin("*")
 	public String editBasicCompany(@RequestBody StockExchange stockExchangeData) {
 		boolean isUpdated = service.updateStockExchangeBasicInfo(stockExchangeData);
 		if (isUpdated) {

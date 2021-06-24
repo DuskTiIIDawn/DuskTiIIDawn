@@ -28,7 +28,7 @@ public class IPODetail {
 	private Long id;
 
 	@Column(nullable = false)
-	private double pricePerShare;
+	private Double pricePerShare;
 
 	@Column(nullable = false)
 	private Long totalNumberOfShares;

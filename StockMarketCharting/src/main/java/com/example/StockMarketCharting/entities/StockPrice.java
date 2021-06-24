@@ -26,7 +26,7 @@ public class StockPrice {
 	private StockCode stockCode;
 
 	@Column(nullable = false)
-	private double currentPrice;
+	private Double currentPrice;
 
 	@Column(nullable = false)
 	private LocalDateTime dateTime;

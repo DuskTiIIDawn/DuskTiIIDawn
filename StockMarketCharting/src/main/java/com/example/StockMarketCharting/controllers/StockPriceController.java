@@ -12,7 +12,6 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -43,7 +42,6 @@ public class StockPriceController {
 	// AKA....import of Data
 	@RequestMapping(value = "/stockPrice/upload", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin("*")
 	public Map<String, Object> addStockExchange(@RequestBody Map<String, JsonNode> requestMap) {
 		Map<String, Object> response = new HashMap<>();
 		int cnt = 0;
@@ -88,7 +86,6 @@ public class StockPriceController {
 
 	@RequestMapping(value = "/stockPrice/getByStockCode", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin("*")
 	public Map<String, Object> getByStockCode(@RequestBody JsonNode jsonNode) {
 		Map<String, Object> response = new HashMap<>();
 		if (jsonNode.get("stockCodeNo") == null) {
@@ -118,7 +115,6 @@ public class StockPriceController {
 
 	@RequestMapping(value = "/stockPrice/removeByStockCode", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin("*")
 	public Long removeByStockCode(@RequestBody JsonNode jsonNode) {
 		if (jsonNode.get("stockCodeNo") == null) {
 			return 0L;
@@ -141,7 +137,6 @@ public class StockPriceController {
 
 	@RequestMapping(value = "/stockPrice/missingRecords", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin("*")
 	public Map<String, Object> getMissingRecordsByStockCode(@RequestBody JsonNode jsonNode) {
 		Map<String, Object> response = new HashMap<>();
 		List<LocalDate> listOfDatesMissing = new ArrayList<>();
