@@ -1,5 +1,6 @@
 package com.example.StockMarketCharting.jwt;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -8,10 +9,13 @@ import org.springframework.stereotype.Service;
 @Service("mailService")
 public class JavaMailerServiceImpl {
 
+	@Autowired
+	JavaMailSenderImpl EmailSender;
+
 	private MailSender mailSender;
 
-	public JavaMailerServiceImpl(JavaMailSenderImpl mailSender) {
-		this.mailSender = mailSender;
+	public JavaMailerServiceImpl() {
+		this.mailSender = EmailSender;
 	}
 
 	public void sendMail(String to, String subject, String body) {
