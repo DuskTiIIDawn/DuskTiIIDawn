@@ -1,7 +1,5 @@
 package com.example.StockMarketCharting.config;
 
-import java.util.Arrays;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,16 +14,16 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.session.SessionManagementFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.example.StockMarketCharting.jwt.JwtAuthenticationEntryPoint;
 import com.example.StockMarketCharting.jwt.JwtRequestFilter;
 
 @Configuration
 @EnableWebSecurity
+@EnableWebMvc
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -58,35 +56,28 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	@Bean
-	SimpleCORSFilter corsFilter() {
-		SimpleCORSFilter filter = new SimpleCORSFilter();
-		return filter;
-	}
+	public WebMvcConfigurer corsConfigurer() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/**")
+						.allowedOrigins("https://stockmarketchartingfrontend.herokuapp.com",
+								"http://stockmarketchartingfrontend.herokuapp.com", "http://localhost:3000")
+						.allowedMethods("PUT", "DELETE", "POST", "OPTIONS", "GET")
+						.allowedHeaders("Authorization", "Origin", "Content-Type", "Accept").allowCredentials(true);
 
-	@Bean
-	CorsConfigurationSource corsConfigurationSource() {
-		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(Arrays.asList("https://glacial-ridge-65812.herokuapp.com"));
-		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS"));
-		configuration.setExposedHeaders(Arrays.asList("Authorization", "content-type"));
-		configuration.setAllowedHeaders(Arrays.asList("Authorization", "content-type"));
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", configuration);
-		return source;
+			}
+		};
 	}
 
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		// We don't need CSRF for this example
-		httpSecurity.csrf().disable().addFilterBefore(corsFilter(), SessionManagementFilter.class)
+		httpSecurity.cors().and().csrf().disable()
 				// dont authenticate this particular request
 				.authorizeRequests().antMatchers("/authenticate").permitAll().antMatchers("/setuserapi1").permitAll()
-				.antMatchers("/**").permitAll().antMatchers("/confirmuser/**").permitAll().antMatchers("/company/**")
-				.permitAll().antMatchers("/editUserapi1").permitAll().antMatchers("/sector/**").permitAll()
-				.antMatchers("/setuserapi1").permitAll().
-
-				// all other requests need to be authenticated
-				anyRequest().authenticated().and().
+				.antMatchers("/**").permitAll().antMatchers("/confirmuser/**").permitAll().anyRequest().authenticated()
+				.and().
 				// make sure we use stateless session; session won't be used to
 				// store user's state.
 				exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()

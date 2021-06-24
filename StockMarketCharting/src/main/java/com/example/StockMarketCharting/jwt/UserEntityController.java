@@ -2,17 +2,9 @@ package com.example.StockMarketCharting.jwt;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
-
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
@@ -20,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,6 +34,10 @@ public class UserEntityController {
 	@Autowired
 	private JwtUserDetailsService userDetailsService;
 
+	@Autowired
+	@Qualifier("javasampleapproachMailSender")
+	public MailSender mailSender;
+
 	@RequestMapping(value = "/authenticate", method = RequestMethod.POST, headers = "Accept=application/json")
 	public Map<String, String> createAuthenticationToken(@RequestBody JsonNode request) throws Exception {
 		Map<String, String> res = new HashMap<>();
@@ -51,7 +48,7 @@ public class UserEntityController {
 		String rawPassword = request.get("password").asText();
 		UserEntity userEntity = service.findByUserName(userName);
 
-		if (userEntity == null || bcryptEncoder.matches(rawPassword, userEntity.getPassword())) {
+		if (userEntity == null || bcryptEncoder.matches(rawPassword, userEntity.getPassword()) == false) {
 			res.put("ERROR", "Username Password Does Not Match ");
 			return res;
 		}
@@ -71,8 +68,7 @@ public class UserEntityController {
 
 	@RequestMapping(value = "/setuserapi1", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, String> userapi(@RequestBody UserEntity user, BindingResult result)
-			throws AddressException, MessagingException {
+	public Map<String, String> userapi(@RequestBody UserEntity user, BindingResult result) {
 
 		Map<String, String> res = new HashMap<>();
 
@@ -103,7 +99,7 @@ public class UserEntityController {
 				user.getEmail(), user.getMobileNumber(), user.isConfirmed());
 
 		service.saveUser(usr);
-		sendemail(usr.getId(), usr.getUserName(), usr.getEmail());
+		sendEmail(usr.getId(), usr.getUserName(), usr.getEmail());
 		res.put("OK", "User Created Succesfully ,Check your Mail To verify and Login!");
 		return res;
 
@@ -111,8 +107,7 @@ public class UserEntityController {
 
 	@RequestMapping(value = "/changePasswordapi1", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, String> changepasswordrapi(@RequestBody JsonNode request)
-			throws AddressException, MessagingException {
+	public Map<String, String> changepasswordrapi(@RequestBody JsonNode request) {
 
 		Map<String, String> res = new HashMap<>();
 		if (request.get("userName") == null) {
@@ -124,7 +119,8 @@ public class UserEntityController {
 			res.put("ERROR", "Please Provide Old Password");
 			return res;
 		}
-		if (userRepo == null || bcryptEncoder.matches(request.get("oldpassword").asText(), userRepo.getPassword())) {
+		if (userRepo == null
+				|| bcryptEncoder.matches(request.get("oldPassword").asText(), userRepo.getPassword()) == false) {
 			res.put("ERROR", "Incorrect password");
 			return res;
 		}
@@ -134,6 +130,7 @@ public class UserEntityController {
 		}
 		userRepo.setPassword(bcryptEncoder.encode(request.get("newPassword").asText()));
 		service.saveUser(userRepo);
+		res.put("OK", "Password Chaged Successfully!");
 		return res;
 
 	}
@@ -147,51 +144,28 @@ public class UserEntityController {
 		return service.findByUserName(request.get("userName").asText());
 	}
 
-	public void sendemail(Long uid, String uName, String email) throws AddressException, MessagingException {
-
-		final String username = "classesfuturetrack@gmail.com";
-		final String password = "prqxktmhfyhvqmeh";
-
-		Properties prop = new Properties();
-		prop.put("mail.smtp.host", "smtp.gmail.com");
-		prop.put("mail.smtp.port", "587");
-		prop.put("mail.smtp.auth", "true");
-		prop.put("mail.smtp.starttls.enable", "true"); // TLS
-
-		Session session = Session.getInstance(prop, new javax.mail.Authenticator() {
-			protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
-				return new javax.mail.PasswordAuthentication(username, password);
-			}
-		});
-
-		try {
-
-			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress("classesfuturetrack@gmail.com"));
-			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
-			message.setSubject("User confirmation email");
-			message.setText("From," + "\n\n Stock Market Charting App!");
-			message.setContent("<h1><a href =\"https://glacial-ridge-65812.herokuapp.com/confirmuser/" + uid + "/"
-					+ bcryptEncoder.encode(uName) + "/\"> Click to confirm </a></h1>", "text/html");
-			Transport.send(message);
-		} catch (MessagingException e) {
-			e.printStackTrace();
-		}
-
+	public void sendEmail(Long uid, String uName, String email) {
+		String subject = "Account Confirmation Mail from Stock Chart Marketing";
+		String message = "Click The link to confirm --> https://glacial-ridge-65812.herokuapp.com/confirmuser/" + uid
+				+ "?token=" + bcryptEncoder.encode(uName);
+		mailSender.sendMail("classesfuturetrack@gmail.com", email, subject, message);
 	}
 
-	@RequestMapping(value = "/confirmuser/{uid}/{encodedUsrName}", method = RequestMethod.GET)
-	public String welcomepage(@PathVariable Long uid, @PathVariable String encodedUsrName) {
+	@RequestMapping(value = "/confirmuser/{uid}", method = { RequestMethod.GET, RequestMethod.POST })
+	public String welcomepage(@PathVariable Long uid, @RequestParam String token) {
 		UserEntity usr = service.findByUserId(uid);
 
 		if (usr == null)
 			return "Unknown User";
-		if (bcryptEncoder.matches(usr.getUserName(), encodedUsrName) == false) {
+		if (bcryptEncoder.matches(usr.getUserName(), token) == false) {
 			return "User Does Not Exist";
+		}
+		if (usr.isConfirmed() == true) {
+			return "User Already Confirmed Go back and Enjoy The app-->" + usr.getUserName();
 		}
 		usr.setConfirmed(true);
 		service.saveUser(usr);
-		return "User confirmed --->" + usr.getUserName();
+		return "User confirmed ! Thanks You can Login Now--->" + usr.getUserName();
 	}
 
 }
