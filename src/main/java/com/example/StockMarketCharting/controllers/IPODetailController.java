@@ -71,6 +71,7 @@ public class IPODetailController {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ipoDetail/addUpdate", method = RequestMethod.POST)
 	@ResponseBody
 	public String addOrUpdateIPO(@RequestBody JsonNode requestMap) {
