@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.example.StockMarketCharting.jwt.JwtAuthenticationEntryPoint;
@@ -22,6 +23,7 @@ import com.example.StockMarketCharting.jwt.JwtRequestFilter;
 
 @Configuration
 @EnableWebSecurity
+@EnableWebMvc
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -58,10 +60,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("https://stockmarketchartingfrontend.herokuapp.com")
-						.allowedMethods("PUT", "DELETE", "POST", "OPTIONS").allowedHeaders("Authorization")
-						.allowCredentials(false).maxAge(3600);
-				;
+				registry.addMapping("/**")
+						.allowedOrigins("https://stockmarketchartingfrontend.herokuapp.com",
+								"http://stockmarketchartingfrontend.herokuapp.com", "http://localhost:3000")
+						.allowedMethods("PUT", "DELETE", "POST", "OPTIONS")
+						.allowedHeaders("Authorization", "Origin", "Content-Type", "Accept").allowCredentials(true);
+
 			}
 		};
 	}
