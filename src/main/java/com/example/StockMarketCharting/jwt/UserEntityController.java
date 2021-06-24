@@ -128,6 +128,7 @@ public class UserEntityController {
 		}
 		userRepo.setPassword(bcryptEncoder.encode(request.get("newPassword").asText()));
 		service.saveUser(userRepo);
+		res.put("OK", "PassWord Chaged Successfully!");
 		return res;
 
 	}
