@@ -140,7 +140,6 @@ public class UserEntityController {
 	}
 
 	public void sendEmail(Long uid, String uName, String email) {
-
 		String subject = "Account Confirmation Mail from Stock Chart Marketing";
 		String message = "Click The link to confirm --> https://glacial-ridge-65812.herokuapp.com/confirmuser/" + uid
 				+ "/" + bcryptEncoder.encode(uName);
