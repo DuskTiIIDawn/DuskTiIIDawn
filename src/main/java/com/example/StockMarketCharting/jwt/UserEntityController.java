@@ -159,6 +159,9 @@ public class UserEntityController {
 		if (bcryptEncoder.matches(usr.getUserName(), encodedUsrName) == false) {
 			return "User Does Not Exist";
 		}
+		if (usr.isConfirmed() == true) {
+			return "User Already Confirmed Go back and Enjoy The app-->" + usr.getUserName();
+		}
 		usr.setConfirmed(true);
 		service.saveUser(usr);
 		return "User confirmed ! Thanks You can Login Now--->" + usr.getUserName();
