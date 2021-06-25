@@ -23,16 +23,12 @@ import com.example.StockMarketCharting.entities.StockPrice;
 import com.example.StockMarketCharting.services.StockCodeService;
 import com.example.StockMarketCharting.services.StockPriceService;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.monitorjbl.json.JsonViewModule;
 
 @Controller
 public class StockPriceController {
 	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yy H:m:s");
 	private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-M-d");
 	private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-M-d H:m");
-	private ObjectMapper mapper = new ObjectMapper().registerModules(new JsonViewModule(), new JavaTimeModule());
 
 	@Autowired
 	StockPriceService service;
