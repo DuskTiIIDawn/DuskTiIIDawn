@@ -107,7 +107,7 @@ public class StockCodeController {
 		Long stockCodeNo = jsonNode.get("stockCodeNo").asLong();
 		StockCode stockCode = service.findByStockCode(stockCodeNo);
 		if (stockCode != null) {
-			return "Error: Please Use different Stock Code No. It already exist";
+			return "Error: Please Use different Stock Code No.It already exist";
 		}
 		if (jsonNode.get("stockCodeId") != null) {
 			Long stockCodeId = jsonNode.get("stockCodeId").asLong();
