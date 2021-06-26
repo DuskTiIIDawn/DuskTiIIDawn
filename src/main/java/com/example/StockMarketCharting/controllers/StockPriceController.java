@@ -30,7 +30,7 @@ public class StockPriceController {
 	private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-M-d"); // for reading missing records
 																						// date input
 	private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-M-d H:m"); // for reading see data
-																								// input
+																								// input from react app
 
 	@Autowired
 	StockPriceService service;
