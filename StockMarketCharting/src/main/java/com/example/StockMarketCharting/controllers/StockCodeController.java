@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -97,6 +98,7 @@ public class StockCodeController {
 
 	@RequestMapping(value = "/stockCode/addUpdate", method = RequestMethod.POST)
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public String addStockCode(@RequestBody JsonNode jsonNode) {
 
 		if (jsonNode.get("stockCodeNo") == null) {
@@ -105,7 +107,7 @@ public class StockCodeController {
 		Long stockCodeNo = jsonNode.get("stockCodeNo").asLong();
 		StockCode stockCode = service.findByStockCode(stockCodeNo);
 		if (stockCode != null) {
-			return "Error: Please Use different Stock Code No. It already exist";
+			return "Error: Please Use different Stock Code No.It already exist";
 		}
 		if (jsonNode.get("stockCodeId") != null) {
 			Long stockCodeId = jsonNode.get("stockCodeId").asLong();
@@ -137,7 +139,11 @@ public class StockCodeController {
 
 	@RequestMapping(value = "/stockCode/remove", method = RequestMethod.POST)
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public String removeStockCode(@RequestBody JsonNode jsonNode) {
+		if (jsonNode.get("stockCodeId") == null) {
+			return "Stock  Code Id Must Not Be Null";
+		}
 		Long stockCodeId = jsonNode.get("stockCodeId").asLong();
 		if (service.removeStockCode(stockCodeId)) {
 			return "Stock Code Removed";

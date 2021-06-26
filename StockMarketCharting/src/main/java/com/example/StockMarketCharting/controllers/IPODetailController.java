@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -74,6 +75,7 @@ public class IPODetailController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ipoDetail/addUpdate", method = RequestMethod.POST)
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public String addOrUpdateIPO(@RequestBody JsonNode requestMap) {
 		if (requestMap.get("pricePerShare") == null || requestMap.get("totalNumberOfShares") == null
 				|| requestMap.get("openDateTime") == null) {
@@ -108,6 +110,7 @@ public class IPODetailController {
 
 	@RequestMapping(value = "/ipoDetail/remove", method = RequestMethod.POST)
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public String removeIPO(@RequestBody JsonNode requestMap) {
 		if (requestMap.get("ipoDetailId") == null)
 			return "ipoDetail Id must not be null";

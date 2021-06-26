@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,16 +23,14 @@ import com.example.StockMarketCharting.entities.StockPrice;
 import com.example.StockMarketCharting.services.StockCodeService;
 import com.example.StockMarketCharting.services.StockPriceService;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.monitorjbl.json.JsonViewModule;
 
 @Controller
 public class StockPriceController {
-	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yy H:m:s");
-	private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-M-d");
-	private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-M-d H:m");
-	private ObjectMapper mapper = new ObjectMapper().registerModules(new JsonViewModule(), new JavaTimeModule());
+	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yy H:m:s"); // for reading excel
+	private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-M-d"); // for reading missing records
+																						// date input
+	private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-M-d H:m"); // for reading see data
+																								// input from react app
 
 	@Autowired
 	StockPriceService service;
@@ -42,6 +41,7 @@ public class StockPriceController {
 	// AKA....import of Data
 	@RequestMapping(value = "/stockPrice/upload", method = RequestMethod.POST)
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public Map<String, Object> addStockExchange(@RequestBody Map<String, JsonNode> requestMap) {
 		Map<String, Object> response = new HashMap<>();
 		int cnt = 0;
@@ -115,6 +115,7 @@ public class StockPriceController {
 
 	@RequestMapping(value = "/stockPrice/removeByStockCode", method = RequestMethod.POST)
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public Long removeByStockCode(@RequestBody JsonNode jsonNode) {
 		if (jsonNode.get("stockCodeNo") == null) {
 			return 0L;
@@ -137,6 +138,7 @@ public class StockPriceController {
 
 	@RequestMapping(value = "/stockPrice/missingRecords", method = RequestMethod.POST)
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public Map<String, Object> getMissingRecordsByStockCode(@RequestBody JsonNode jsonNode) {
 		Map<String, Object> response = new HashMap<>();
 		List<LocalDate> listOfDatesMissing = new ArrayList<>();
