@@ -147,7 +147,7 @@ public class UserEntityController {
 	public void sendEmail(Long uid, String uName, String email) {
 		String subject = "Account Confirmation Mail from Stock Chart Marketing";
 		String message = "Click The link to confirm --> https://glacial-ridge-65812.herokuapp.com/confirmuser/" + uid
-				+ "?token=" + bcryptEncoder.encode(uName + "you_can_never_hack_my_website");
+				+ "?token=" + bcryptEncoder.encode(uName + System.getenv().get("CONFIRMATION_SECRET_CODE"));
 		mailSender.sendMail("classesfuturetrack@gmail.com", email, subject, message);
 	}
 
@@ -156,7 +156,8 @@ public class UserEntityController {
 		UserEntity usr = service.findByUserId(uid);
 		if (usr == null)
 			return "Unknown User";
-		if (bcryptEncoder.matches(usr.getUserName() + "you_can_never_hack_my_website", token) == false) {
+		if (bcryptEncoder.matches(usr.getUserName() + System.getenv().get("CONFIRMATION_SECRET_CODE"),
+				token) == false) {
 			return "User Does Not Exist";
 		}
 		if (usr.isConfirmed() == true) {
