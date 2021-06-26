@@ -33,7 +33,7 @@ public class IPODetail {
 	@Column(nullable = false)
 	private Long totalNumberOfShares;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy hh:mm:ss")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm")
 	private LocalDateTime openDateTime;
 
 	@OneToOne(fetch = FetchType.LAZY)

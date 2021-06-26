@@ -26,9 +26,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 @Controller
 public class StockPriceController {
-	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yy H:m:s");
-	private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-M-d");
-	private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-M-d H:m");
+	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yy H:m:s"); // for reading excel
+	private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-M-d"); // for reading missing records
+																						// date input
+	private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-M-d H:m"); // for reading see data
+																								// input
 
 	@Autowired
 	StockPriceService service;
