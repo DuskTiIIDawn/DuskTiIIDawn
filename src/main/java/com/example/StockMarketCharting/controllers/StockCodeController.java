@@ -149,7 +149,7 @@ public class StockCodeController {
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public String removeStockCode(@RequestBody JsonNode jsonNode) {
 		if (jsonNode.get("stockCodeId") == null) {
-			return "Stock  Code Id Must Not Be Null";
+			return "Stock Code Id Must Not Be Null";
 		}
 		Long stockCodeId = jsonNode.get("stockCodeId").asLong();
 		StockCode stockCode = service.findByStockCodeId(stockCodeId);
