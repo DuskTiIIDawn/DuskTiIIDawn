@@ -99,7 +99,7 @@ public class StockCodeController {
 	@RequestMapping(value = "/stockCode/addUpdate", method = RequestMethod.POST)
 	@ResponseBody
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public String addStockCode(@RequestBody JsonNode jsonNode) {
+	public String addUpdateStockCode(@RequestBody JsonNode jsonNode) {
 
 		if (jsonNode.get("stockCodeNo") == null) {
 			return "StockCodeNo Required";

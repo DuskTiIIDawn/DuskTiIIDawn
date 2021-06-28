@@ -81,13 +81,13 @@ public class CompanyController {
 
 	}
 
-	@RequestMapping(value = "/company/withoutIpo", method = RequestMethod.GET)
+	@RequestMapping(value = "/company/withoutIpoAndWithStockCodes", method = RequestMethod.GET)
 	@ResponseBody
 	public String getAllCompanyWithoutIpo() {
 		List<Company> allList = service.findallCompanies();
 		List<Company> list = new ArrayList<>();
 		for (Company c : allList) {
-			if (c.getIpo() == null) {
+			if (c.getIpo() == null && c.getStockCodes().size() > 0) {
 				list.add(c);
 			}
 		}
