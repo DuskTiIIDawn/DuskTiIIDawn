@@ -42,7 +42,7 @@ public class CompanyService {
 	}
 
 	public List<Company> findByCompanyNameContaining(String str) {
-		List<Company> companies = companyRepository.findByCompanyNameContaining(str);
+		List<Company> companies = companyRepository.findByCompanyNameContainingIgnoreCase(str);
 		return companies;
 
 	}
