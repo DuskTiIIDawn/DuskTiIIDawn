@@ -36,7 +36,7 @@ public class IPODetailService {
 	}
 
 	public List<IPODetail> findallIPO() {
-		List<IPODetail> ipoList = ipoDetailRepository.findAll();
+		List<IPODetail> ipoList = ipoDetailRepository.findAllByOrderByOpenDateTimeDesc();
 		return ipoList;
 	}
 
@@ -93,6 +93,10 @@ public class IPODetailService {
 			return true;
 		} else
 			return false;
+	}
+
+	public IPODetail saveIPO(IPODetail ipoDetail) {
+		return ipoDetailRepository.save(ipoDetail);
 	}
 
 }

@@ -32,7 +32,7 @@ public class SectorService {
 	}
 
 	public List<Sector> findAll() {
-		return sectorRepository.findAll();
+		return sectorRepository.findAllByOrderBySectorName();
 	}
 
 	public List<Company> getCompaniesBySectorId(Long sectorId) {

@@ -23,7 +23,7 @@ public class CompanyService {
 	}
 
 	public List<Company> findallCompanies() {
-		List<Company> companyList = companyRepository.findAll();
+		List<Company> companyList = companyRepository.findAllByOrderByCompanyName();
 		return companyList;
 	}
 
@@ -42,13 +42,13 @@ public class CompanyService {
 	}
 
 	public List<Company> findByCompanyNameContaining(String str) {
-		List<Company> companies = companyRepository.findByCompanyNameContaining(str);
+		List<Company> companies = companyRepository.findByCompanyNameContainingIgnoreCase(str);
 		return companies;
 
 	}
 
 	public List<Company> findBySector_IdAndCompanyNameContaining(Long sectorId, String str) {
-		List<Company> companies = companyRepository.findBySector_IdAndCompanyNameContaining(sectorId, str);
+		List<Company> companies = companyRepository.findBySector_IdAndCompanyNameContainingIgnoreCase(sectorId, str);
 		return companies;
 
 	}

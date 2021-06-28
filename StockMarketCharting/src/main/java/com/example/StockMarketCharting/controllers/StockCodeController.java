@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.StockMarketCharting.entities.Company;
+import com.example.StockMarketCharting.entities.IPODetail;
 import com.example.StockMarketCharting.entities.StockCode;
 import com.example.StockMarketCharting.entities.StockExchange;
 import com.example.StockMarketCharting.services.CompanyService;
+import com.example.StockMarketCharting.services.IPODetailService;
 import com.example.StockMarketCharting.services.StockCodeService;
 import com.example.StockMarketCharting.services.StockExchangeService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -38,6 +40,9 @@ public class StockCodeController {
 
 	@Autowired
 	CompanyService companyService;
+
+	@Autowired
+	IPODetailService ipoDetailService;
 
 	@RequestMapping(value = "/stockCode/getAll", method = RequestMethod.POST)
 	@ResponseBody
@@ -99,7 +104,7 @@ public class StockCodeController {
 	@RequestMapping(value = "/stockCode/addUpdate", method = RequestMethod.POST)
 	@ResponseBody
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public String addStockCode(@RequestBody JsonNode jsonNode) {
+	public String addUpdateStockCode(@RequestBody JsonNode jsonNode) {
 
 		if (jsonNode.get("stockCodeNo") == null) {
 			return "StockCodeNo Required";
@@ -137,14 +142,36 @@ public class StockCodeController {
 		}
 	}
 
+	/* when removing the stock code make sure to update the ipo of company */
+
 	@RequestMapping(value = "/stockCode/remove", method = RequestMethod.POST)
 	@ResponseBody
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public String removeStockCode(@RequestBody JsonNode jsonNode) {
 		if (jsonNode.get("stockCodeId") == null) {
-			return "Stock  Code Id Must Not Be Null";
+			return "Stock Code Id Must Not Be Null";
 		}
 		Long stockCodeId = jsonNode.get("stockCodeId").asLong();
+		StockCode stockCode = service.findByStockCodeId(stockCodeId);
+
+		if (stockCode != null) {
+			IPODetail ipoDetail = stockCode.getCompany().getIpo();
+			Long stockExchangeId = stockCode.getStockExchange().getId();
+			if (ipoDetail != null) {
+				List<StockExchange> list = ipoDetail.getStockExchanges();
+				List<StockExchange> newList = new ArrayList<>();
+				for (StockExchange se : list) {
+					if (se.getId() != stockExchangeId) {
+						newList.add(se);
+					}
+				}
+				ipoDetail.setStockExchanges(newList);
+				ipoDetailService.saveIPO(ipoDetail);
+			}
+
+		} else {
+			return "Stock Code Does Not Exist";
+		}
 		if (service.removeStockCode(stockCodeId)) {
 			return "Stock Code Removed";
 		} else {
