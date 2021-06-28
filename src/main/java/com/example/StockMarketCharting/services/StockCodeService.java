@@ -20,7 +20,7 @@ public class StockCodeService {
 	}
 
 	public List<StockCode> findAll() {
-		return stockCodeRepository.findAll();
+		return stockCodeRepository.findAllByOrderByIdDesc();
 	}
 
 	public StockCode findByStockCode(long l) {

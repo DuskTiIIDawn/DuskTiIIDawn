@@ -9,9 +9,10 @@ import com.example.StockMarketCharting.entities.Company;
 
 @Repository
 public interface CompanyRepository extends JpaRepository<Company, Long> {
+	List<Company> findAllByOrderByCompanyName();
 
 	List<Company> findByCompanyNameContainingIgnoreCase(String companyName);
 
-	List<Company> findBySector_IdAndCompanyNameContaining(Long sectorId, String companyName);
+	List<Company> findBySector_IdAndCompanyNameContainingIgnoreCase(Long sectorId, String companyName);
 
 }

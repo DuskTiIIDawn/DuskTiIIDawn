@@ -9,6 +9,7 @@ import com.example.StockMarketCharting.entities.StockCode;
 
 @Repository
 public interface StockCodeRepository extends JpaRepository<StockCode, Long> {
+	List<StockCode> findAllByOrderByIdDesc();
 
 	List<StockCode> findByStockCode(Long stockCode);
 

@@ -20,7 +20,7 @@ public class StockExchangeService {
 	}
 
 	public List<StockExchange> findallStockExchange() {
-		List<StockExchange> stockExchangeList = stockExchangeRepository.findAll();
+		List<StockExchange> stockExchangeList = stockExchangeRepository.findAllByOrderByStockExchangeName();
 		return stockExchangeList;
 	}
 

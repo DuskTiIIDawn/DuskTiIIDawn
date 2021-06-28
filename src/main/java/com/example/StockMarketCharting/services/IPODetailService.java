@@ -36,7 +36,7 @@ public class IPODetailService {
 	}
 
 	public List<IPODetail> findallIPO() {
-		List<IPODetail> ipoList = ipoDetailRepository.findAll();
+		List<IPODetail> ipoList = ipoDetailRepository.findAllByOrderByOpenDateTime();
 		return ipoList;
 	}
 
