@@ -90,7 +90,7 @@ public class StockExchangeController {
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public String addStockExchange(@RequestBody StockExchange stockExchange) {
 		service.addStockExchange(stockExchange);
-		return "Stock Exchange Added";
+		return "Stock Exchange Added !";
 	}
 
 	@RequestMapping(value = "/stockExchange/editBasic", method = RequestMethod.POST)
