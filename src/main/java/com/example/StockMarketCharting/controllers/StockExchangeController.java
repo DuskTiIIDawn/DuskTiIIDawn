@@ -101,7 +101,7 @@ public class StockExchangeController {
 		if (isUpdated) {
 			return "Stock Exchange Updated";
 		} else {
-			return "Update Failed";
+			return "Update Failed !";
 		}
 	}
 
