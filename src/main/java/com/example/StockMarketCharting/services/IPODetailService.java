@@ -95,4 +95,8 @@ public class IPODetailService {
 			return false;
 	}
 
+	public IPODetail saveIPO(IPODetail ipoDetail) {
+		return ipoDetailRepository.save(ipoDetail);
+	}
+
 }
