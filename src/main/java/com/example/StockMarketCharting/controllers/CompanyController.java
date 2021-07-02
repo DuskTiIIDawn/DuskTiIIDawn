@@ -196,7 +196,7 @@ public class CompanyController {
 				company.setSector(sector);
 				service.addCompany(company);
 			} else {
-				return "Sector Does Not Exist";
+				return "Sector Does Not Exist!";
 			}
 			return "Company Added to sector";
 		}
