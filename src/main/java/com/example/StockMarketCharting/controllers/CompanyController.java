@@ -165,7 +165,7 @@ public class CompanyController {
 		if (isUpdated) {
 			return "Company Data Updated";
 		} else {
-			return "Update Failed";
+			return "Update Failed!";
 		}
 	}
 
