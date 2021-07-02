@@ -109,7 +109,7 @@ public class CompanyController {
 		Long companyId = jsonNode.get("companyId").asLong();
 		Company company = service.findById(companyId);
 		if (company == null) {
-			return "Company Does Not Exist";
+			return "Company Does Not Exist!";
 		}
 
 		try {
