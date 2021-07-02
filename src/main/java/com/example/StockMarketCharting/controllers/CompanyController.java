@@ -175,7 +175,7 @@ public class CompanyController {
 	public String addOrRemoveSector(@RequestBody JsonNode jsonNode) {
 
 		if (jsonNode.get("companyId") == null) {
-			return "companyId must not be null";
+			return "companyId must not be null!";
 		}
 
 		Long companyId = jsonNode.get("companyId").asLong();
