@@ -72,9 +72,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-
-		httpSecurity.requiresChannel().requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null).requiresSecure();
-
 		// We don't need CSRF for this example
 		httpSecurity.cors().and().csrf().disable()
 				// dont authenticate this particular request
